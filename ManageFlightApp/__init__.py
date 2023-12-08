@@ -7,7 +7,7 @@ import ManageFlightApp
 
 app = Flask(__name__)
 app.secret_key = "bbbbbb"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:24042003@localhost/saledb1?charset=utf8"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:24042003@localhost/ManageFlight?charset=utf8"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 db = SQLAlchemy(app=app)
 app.config["page_size"] = 3
