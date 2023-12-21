@@ -3,7 +3,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
+}
 
 .carousel-inner {
       transition: transform 2s ease-in-out;
