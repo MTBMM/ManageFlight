@@ -51,7 +51,6 @@ class TicketClass(db.Model):
 
 class Ticket(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    price = Column(FLOAT, default=0)
     purchase_time = Column(DATETIME, nullable=False)  # Thời gian mua vé
     booking_time = Column(DATETIME, nullable=False)
     customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
@@ -60,6 +59,7 @@ class Ticket(db.Model):
 
 
 class Plane(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=True)
 
 
@@ -87,19 +87,12 @@ class Schedules(db.Model):
 
 
 class Route(db.Model):
-    __abstract__ = True
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)  # Tên của tuyến đường
     description = Column(String(1000))  # Mô tả tuyến đường
     distance = Column(FLOAT)  # Khoảng cách của tuyến đường (đơn vị: km)
-
-
-class OneStopRoute(Route):
-    stop_location = Column(String(255))  # Địa điểm dừng duy nhất của tuyến đường một điểm
-
-
-class MultiStopRoute(Route):
-    pass
+    arrival = Column(String(255), nullable=False)
+    departure = Column(String(255), nullable=False)
 
 
 class Airport(db.Model):
@@ -112,13 +105,13 @@ class Airport(db.Model):
 
 class TicketPrice(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
+    price = Column(FLOAT, default=0)  # Đơn giá vé
     ticket_class_id = Column(Integer, ForeignKey(TicketClass.id), nullable=False)
     states = Column(BOOLEAN, default=False)
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)
-    price = Column(FLOAT, nullable=False)  # Đơn giá vé
 
 
-class Stop(db.Model):
+class Stop(db.Model):   
     id = Column(Integer, primary_key=True, autoincrement=True)
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)  # Khóa ngoại liên kết với sân bay
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)  # Khóa ngoại liên kết với tuyến đường
@@ -132,10 +125,6 @@ class Airline(db.Model):
     name = Column(String(255))
     description = Column(String(1000))
     max_airports_served = Column(Integer, default=0)  # Số lượng sân bay tối đa mà hãng vận tải có thể phục vụ
-
-
-class FlightSetting(db.Model):
-    pass
 
 
 if __name__ == '__main__':

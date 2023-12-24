@@ -4,7 +4,6 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 import cloudinary
 
-
 import ManageFlightApp
 app = Flask(__name__)
 app.secret_key = "bbbbbb"
@@ -19,5 +18,6 @@ cloudinary.config(
     api_secret="DyORc5iac39ghbqY6wKHYvBtSac"
 )
 
-
 login = LoginManager(app=app)
+
+
