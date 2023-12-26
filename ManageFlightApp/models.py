@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Enum, BOOLEAN, ForeignKey, FLOAT, DATETIME
 from sqlalchemy.orm import relationship
-from ManageFlightApp.__init__ import admin, db
+from ManageFlightApp import admin, db, app
 from flask_login import UserMixin
 import enum
 
