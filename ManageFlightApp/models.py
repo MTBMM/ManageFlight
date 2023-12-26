@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Enum, BOOLEAN, ForeignKey, FLOAT, DATETIME
 from sqlalchemy.orm import relationship
-from ManageFlightApp import db, app
+from ManageFlightApp.__init__ import admin, db
 from flask_login import UserMixin
 import enum
 
@@ -111,7 +111,7 @@ class TicketPrice(db.Model):
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)
 
 
-class Stop(db.Model):   
+class Stop(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)  # Khóa ngoại liên kết với sân bay
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)  # Khóa ngoại liên kết với tuyến đường
@@ -128,10 +128,10 @@ class Airline(db.Model):
 
 
 if __name__ == '__main__':
-        with app.app_context():
-            db.create_all()
-            # import hashlib
-            # u = User(name='User1', username='U1',
-            #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()))
-            # db.session.add(u)
-            # db.session.commit()
+    with app.app_context():
+        db.create_all()
+        # import hashlib
+        # u = User(name='User1', username='U1',
+        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()))
+        # db.session.add(u)
+        # db.session.commit()

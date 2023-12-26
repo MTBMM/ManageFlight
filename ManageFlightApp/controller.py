@@ -1,5 +1,6 @@
 from ManageFlightApp import app, login, utils
 from flask import render_template
+from ManageFlightApp.admin import *
 
 
 @app.route("/")
@@ -14,4 +15,3 @@ def load_user(user_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
