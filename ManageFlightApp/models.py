@@ -1,17 +1,11 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Enum, BOOLEAN, ForeignKey, FLOAT, DATETIME
 from sqlalchemy.orm import relationship
-from ManageFlightApp import admin, db, app
+from ManageFlightApp import Admin, db, app
 from flask_login import UserMixin
 import enum
 
-
-class Person(db.Model):
-    __abstract__ = True
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(50), nullable=True)
-    avatar = Column(String(100),
-                    default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg')
+from ManageFlightApp.models import Airport
 
 
 class UserRoleEnum(enum.Enum):
@@ -20,17 +14,26 @@ class UserRoleEnum(enum.Enum):
     EMPLOYEE = 3
 
 
-class Customer(Person, UserMixin):
+class Person(db.Model):
+    __abstract__ = True
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=True)
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
+    avatar = Column(String(100),
+                    default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg')
+
+    user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
+
+
+class Customer(Person, UserMixin):
     phone = Column(String(12), nullable=True)
     Identify = Column(String(20), nullable=True)
-    user_role = Column(Enum(UserRoleEnum), default=UserRoleEnum.USER)
     receipts = relationship("Receipt", backref="customer", lazy=True)
     Customer_ticket = relationship('Ticket', backref='customer', lazy=True)
 
 
-class Employee(Person):
+class Employee(Person, UserMixin):
     salary = Column(FLOAT, nullable=True)
 
 
@@ -97,23 +100,21 @@ class Schedules(db.Model):
     date_department = Column(DATETIME, default=datetime.now())
 
 
+class Airport(db.Model):
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), nullable=False)  # Tên sân bay
+    location = Column(String(255))  # Địa điểm sân bay
+    stops_airport = relationship('Stop', backref='airport', lazy=True)
+
+
 class Route(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)  # Tên của tuyến đường
     description = Column(String(1000))  # Mô tả tuyến đường
     distance = Column(FLOAT)  # Khoảng cách của tuyến đường (đơn vị: km)
-    arrival = Column(String(255), nullable=False)
-    departure = Column(String(255), nullable=False)
+    arrival_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
+    departure_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     stops_route = relationship('Stop', backref='route', lazy=True)
-
-
-class Airport(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    code = Column(String(3), unique=True, nullable=False)  # Mã sân bay (3 ký tự)
-    name = Column(String(255), nullable=False)  # Tên sân bay
-    location = Column(String(255))  # Địa điểm sân bay
-    airline_id = Column(Integer, ForeignKey("airline.id"), nullable=False)
-    stops_airport = relationship('Stop', backref='airport', lazy=True)
 
 
 class TicketPrice(db.Model):
@@ -133,13 +134,6 @@ class Stop(db.Model):
     departure_time_min = Column(DATETIME)  # Thời gian khởi hành
 
 
-class Airline(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(255))
-    description = Column(String(1000))
-    max_airports_served = Column(Integer, default=0)  # Số lượng sân bay tối đa mà hãng vận tải có thể phục vụ
-
-
 class Kind(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255))
@@ -148,8 +142,47 @@ class Kind(db.Model):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
         # import hashlib
-        # u = User(name='User1', username='U1',
-        #          password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()))
-        # db.session.add(u)
-        # db.session.commit()
+        #
+        # u1 = Employee(name='Admin', username='admin',
+        #               password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), salary=50000000,
+        #               user_role=UserRoleEnum.ADMIN)
+        #
+        # u2 = Customer(name='Nguyễn Trung Kiên', username='TrungKienIdol',
+        #               password=str(hashlib.md5('TrungKien123'.encode('utf-8')).hexdigest()))
+        # u3 = Customer(name='Hồ Ngọc Nhung', username='NhungNgoc',
+        #               password=str(hashlib.md5('NhungNgoc123'.encode('utf-8')).hexdigest()))
+        # u4 = Customer(name='Bùi Mỹ Nhân', username='ManNhi',
+        #               password=str(hashlib.md5('ManNhi123'.encode('utf-8')).hexdigest()))
+        # u5 = Customer(name='Tống Thị Thu Hiền', username='ThuHien',
+        #               password=str(hashlib.md5('ThuHien123'.encode('utf-8')).hexdigest()))
+        # u6 = Customer(name='Huỳnh Trúc Ly', username='TrucLy',
+        #               password=str(hashlib.md5('TrucLy2003'.encode('utf-8')).hexdigest()))
+        # u7 = Customer(name='Duong Thi Hong Nhu', username='HongNhu',
+        #               password=str(hashlib.md5('HongNhu2004'.encode('utf-8')).hexdigest()))
+        # u8 = Customer(name='Nguyễn Cao', username='CaoNguyen',
+        #               password=str(hashlib.md5('CaoNguyen123'.encode('utf-8')).hexdigest()))
+        # u9 = Employee(name='Phương Mỹ Chi', username='MyChi',
+        #               password=str(hashlib.md5('MyChi123'.encode('utf-8')).hexdigest()), salary=10000000,
+        #               user_role=UserRoleEnum.EMPLOYEE)
+        # u10 = Employee(name='Hồ Thị Cẩm', username='ThiCam',
+        #                password=str(hashlib.md5('ThiCam123'.encode('utf-8')).hexdigest()), salary=15000000,
+        #                user_role=UserRoleEnum.EMPLOYEE)
+        #
+        # # db.session.add_all([u1, u2, u3, u4, u5, u6, u7, u8, u9, u10])
+        # # db.session.commit()
+        #
+        # k1 = Kind(name='Hang Pho Thong')
+        # k2 = Kind(name='Hang Thuong Gia')
+        #
+        # # db.session.add_all([k1, k2])
+        # # db.session.commit()
+        #
+        # a = Airline(name='Sugar Glider', description='Sóc bay', max_airports_served=10)
+        #
+        # # db.session.add_all([a])
+        # # db.session.commit()
+        #
+        # # db.session.add_all([a])
+        # # db.session.commit()
