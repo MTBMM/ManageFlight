@@ -5,8 +5,6 @@ from ManageFlightApp import Admin, db, app
 from flask_login import UserMixin
 import enum
 
-from ManageFlightApp.models import Airport
-
 
 class UserRoleEnum(enum.Enum):
     USER = 1
@@ -110,11 +108,13 @@ class Airport(db.Model):
 class Route(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)  # Tên của tuyến đường
-    description = Column(String(1000))  # Mô tả tuyến đường
     distance = Column(FLOAT)  # Khoảng cách của tuyến đường (đơn vị: km)
+    number_of_airport = Column(Integer,nullable=False)
     arrival_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     departure_id = Column(Integer, ForeignKey(Airport.id), nullable=False)
     stops_route = relationship('Stop', backref='route', lazy=True)
+
+
 
 
 class TicketPrice(db.Model):
@@ -130,8 +130,11 @@ class Stop(db.Model):
     airport_id = Column(Integer, ForeignKey(Airport.id), nullable=False)  # Khóa ngoại liên kết với sân bay
     route_id = Column(Integer, ForeignKey(Route.id), nullable=False)  # Khóa ngoại liên kết với tuyến đường
     order = Column(Integer)  # Thứ tự của điểm dừng trên tuyến đường
-    arrival_time_max = Column(DATETIME)  # Thời gian Đếm
-    departure_time_min = Column(DATETIME)  # Thời gian khởi hành
+    time_delay_max = Column(FLOAT)  # Thời gian Đếm
+    time_delay_min = Column(FLOAT)  # Thời gian khởi hành
+
+
+
 
 
 class Kind(db.Model):
@@ -143,8 +146,8 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        # import hashlib
-        #
+        import hashlib
+
         # u1 = Employee(name='Admin', username='admin',
         #               password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), salary=50000000,
         #               user_role=UserRoleEnum.ADMIN)
@@ -170,19 +173,53 @@ if __name__ == '__main__':
         #                password=str(hashlib.md5('ThiCam123'.encode('utf-8')).hexdigest()), salary=15000000,
         #                user_role=UserRoleEnum.EMPLOYEE)
         #
-        # # db.session.add_all([u1, u2, u3, u4, u5, u6, u7, u8, u9, u10])
-        # # db.session.commit()
-        #
+        # db.session.add_all([u1, u2, u3, u4, u5, u6, u7, u8, u9, u10])
+        # db.session.commit()
+
         # k1 = Kind(name='Hang Pho Thong')
         # k2 = Kind(name='Hang Thuong Gia')
         #
-        # # db.session.add_all([k1, k2])
-        # # db.session.commit()
+        # db.session.add_all([k1, k2])
+        # db.session.commit()
+
+        # A1 = Airport(name='TP.HCM', location='Bình Thạnh, Thành phố Hồ Chí Minh')
+        # A2 = Airport(name='Hà Nội', location='Linh Xuân, Hà Nội')
+        # A3 = Airport(name='Hải Phòng', location='Đóng Đa, Hải Phòng')
+        # A4 = Airport(name='Đà Nẵng', location='Hiệp Phước, Đà Nẵng')
+        # A5 = Airport(name='Cà Mau', location='Long Mỹ, Cà Mau')
+        # A6 = Airport(name='Tây Ninh', location='Châu Thanh, Tây Ninh')
+        # A7 = Airport(name='Sapa', location='Phnong, Sapa')
+        # A8 = Airport(name='Đà Lạt', location='67, Đà Lạt')
+        # A9 = Airport(name='Vũng Tàu', location='Xô Viết, Vũng tàu')
+        # A10 = Airport(name='Phan Thiết', location='Trần Hưng Đạo, Phan Thiết')
         #
-        # a = Airline(name='Sugar Glider', description='Sóc bay', max_airports_served=10)
-        #
-        # # db.session.add_all([a])
-        # # db.session.commit()
-        #
-        # # db.session.add_all([a])
-        # # db.session.commit()
+        # db.session.add_all([A1, A2, A3, A4, A5, A6, A7, A8, A9, A10])
+        # db.session.commit()
+
+        # r1 = Route(name='TP.HCM - HÀ NỘI', distance=1190, number_of_airport=2, arrival_id=2, departure_id=1)
+        # r2 = Route(name='TP.HCM - Đà Nẵng', distance=590, number_of_airport=0, arrival_id=4, departure_id=1)
+        # r3 = Route(name='Đà Nẵng - Hải Phòng', distance=200, number_of_airport=0, arrival_id=3, departure_id=4)
+        # r4 = Route(name='Hải Phòng - HÀ NỘI', distance=400, number_of_airport=0, arrival_id=2, departure_id=3)
+        # r5 = Route(name='TP.HCM - Cà Mau', distance=1190, number_of_airport=2, arrival_id=5, departure_id=1)
+        # r6 = Route(name='SaPa - Phan thiết', distance=1190, number_of_airport=1, arrival_id=10, departure_id=7)
+        # r7 = Route(name='Phan Thiết - Vũng tàu', distance=1190, number_of_airport=0, arrival_id=9, departure_id=10)
+        # r8 = Route(name='Tây Ninh - Sapa', distance=1190, number_of_airport=2, arrival_id=7, departure_id=6)
+        # r9 = Route(name='Đà Lạt - TP.HCM', distance=1190, number_of_airport=0, arrival_id=1, departure_id=8)
+        # r10 = Route(name='Vũng Tàu - Đà Lạt', distance=1190, number_of_airport=0, arrival_id=8, departure_id=9)
+
+        r11 = Route(name='Đà nẵng - Đà Lạt', distance=1190, number_of_airport=0, arrival_id=8, departure_id=9)
+        a11 = Airport(name='Hà Giang', location='Bình Thạnh, Hà Giang')
+        # db.session.add_all([r1, r2, r3, r4, r5, r6, r7, r8, r9, r10])
+        # db.session.commit()
+
+        # St1 = Stop(route_id=1, airport_id=4, order=1, time_delay_max=30, time_delay_min=20)
+        # St2 = Stop(route_id=1, airport_id=3, order=2, time_delay_max=30, time_delay_min=20)
+        # St3 = Stop(route_id=6, airport_id=10, order=1, time_delay_max=30, time_delay_min=20)
+        # St = Stop(route=r11, airport=a11, time_delay_max=30, time_delay_min=20)
+        St4 = Stop(route_id=8, airport_id=10, order=1, time_delay_max=30, time_delay_min=20)
+        St5 = Stop(route_id=8, airport_id=4, order=1, time_delay_max=30, time_delay_min=20)
+        St6 = Stop(route_id=9, airport_id=4, order=1, time_delay_max=30, time_delay_min=20)
+        St7 = Stop(route_id=6, airport_id=4, order=1, time_delay_max=30, time_delay_min=20)
+
+        db.session.add_all([St4, St5, St6, St7])
+        db.session.commit()
