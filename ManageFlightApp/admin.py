@@ -23,7 +23,7 @@
 #
 # class SeatView(AuthenticatedView):
 #     column_filters = ["number_seat"]
-#     column_list = ["number_seat", "status", "plane_id", "kind_id"]
+#     column_list = ["number_seat", "status", "plane_id", "ticket_class_id"]
 #
 #
 # class TicketClassView(AuthenticatedView):
