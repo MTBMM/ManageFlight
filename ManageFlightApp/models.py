@@ -28,7 +28,6 @@ class Customer(Person):
     phone = Column(String(12), nullable=True)
     Identify = Column(String(20), nullable=True)
     receipts = relationship("Receipt", backref="customer", lazy=True)
-    Customer_ticket = relationship('Ticket', backref='customer', lazy=True)
 
 
 class Employee(Person):
@@ -60,7 +59,6 @@ class TicketClass(db.Model):
 class Ticket(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     purchase_time = Column(DATETIME, nullable=False, default=datetime.now())  # Thời gian mua vé
-    customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
     seat_id = Column(Integer, ForeignKey(Seat.id), nullable=False)
     fight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
     ticket_class_id = Column(Integer, ForeignKey(TicketClass.id), nullable=False)
@@ -75,6 +73,7 @@ class Receipt(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     created_date = Column(DATETIME, default=datetime.now())
     user_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
+    employee_id = Column(Integer, ForeignKey(Employee.id), nullable=False)
     quantity = Column(Integer, default=0)
     ticket_class_id = Column(Integer, ForeignKey(TicketClass.id), nullable=False)
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
@@ -280,6 +279,16 @@ if __name__ == '__main__':
         # Rc3 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, ticket_class_id=2, flight_id=1, quantity=2,
         #               unit_price=3000000)
         #
+        Rc1 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=2, ticket_class_id=1, flight_id=1,
+                      quantity=3,
+                      unit_price=3600000)
+        Rc2 = Receipt(created_date='2023-12-30 19:15:00', user_id=2, employee_id=2, ticket_class_id=2, flight_id=1,
+                      quantity=2,
+                      unit_price=3000000)
+        Rc3 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=2, ticket_class_id=2, flight_id=1,
+                      quantity=2,
+                      unit_price=3000000)
+
         # db.session.add_all([Rc1, Rc2, Rc3])
         # db.session.commit()
 
@@ -291,13 +300,16 @@ if __name__ == '__main__':
         db.session.add_all([Tp1, Tp2, Tp3, Tp4])
         db.session.commit()
 
-        T1 = Ticket(purchase_time='2023-12-31 02:00:00', customer_id=1, seat_id=1, fight_id=1, ticket_class_id=1)
-        T2 = Ticket(purchase_time='2023-12-31 02:00:00', customer_id=1, seat_id=2, fight_id=1, ticket_class_id=1)
-        T3 = Ticket(purchase_time='2023-12-31 02:00:00', customer_id=1, seat_id=3, fight_id=1, ticket_class_id=1)
-        T4 = Ticket(purchase_time='2023-12-31 01:00:00', customer_id=1, seat_id=16, fight_id=1, ticket_class_id=1)
-        T5 = Ticket(purchase_time='2023-12-31 01:00:00', customer_id=1, seat_id=17, fight_id=1, ticket_class_id=1)
-        T6 = Ticket(purchase_time='2023-12-31 03:00:00', customer_id=1, seat_id=18, fight_id=1, ticket_class_id=1)
-        T7 = Ticket(purchase_time='2023-12-31 03:0:00', customer_id=1, seat_id=19, fight_id=1, ticket_class_id=1)
+        # db.session.add_all([Tp1, Tp2, Tp3, Tp4])
+        # db.session.commit()
+
+        T1 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=1, fight_id=1, ticket_class_id=1)
+        T2 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=2, fight_id=1, ticket_class_id=1)
+        T3 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=3, fight_id=1, ticket_class_id=1)
+        T4 = Ticket(purchase_time='2023-12-31 01:00:00', seat_id=16, fight_id=1, ticket_class_id=1)
+        T5 = Ticket(purchase_time='2023-12-31 01:00:00', seat_id=17, fight_id=1, ticket_class_id=1)
+        T6 = Ticket(purchase_time='2023-12-31 03:00:00', seat_id=18, fight_id=1, ticket_class_id=1)
+        T7 = Ticket(purchase_time='2023-12-31 03:0:00', seat_id=19, fight_id=1, ticket_class_id=1)
 
         db.session.add_all([T1, T2, T3, T4, T5, T6, T7])
         db.session.commit()
@@ -319,4 +331,3 @@ if __name__ == '__main__':
 
         db.session.add_all([Sc1, Sc2, Sc3])
         db.session.commit()
-
