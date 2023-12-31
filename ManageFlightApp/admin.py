@@ -2,8 +2,8 @@ from ManageFlightApp.models import *
 from flask_login import logout_user, current_user
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import AdminIndexView, expose, Admin, BaseView
-from ManageFlightApp import admin, db
-from flask import redirect
+from ManageFlightApp import admin, db, utils
+from flask import redirect, request
 
 
 class AuthenticatedView(ModelView):
@@ -32,7 +32,7 @@ class TicketClassView(AuthenticatedView):
 
 
 class TicketView(AuthenticatedView):
-    column_filters = ["customer_id"]
+    column_filters = ["id"]
 
 
 class PlaneView(AuthenticatedView):
@@ -82,18 +82,28 @@ class EmployeeView(AuthenticatedView):
 class MyAdminIndexView(AdminIndexView):
     @expose("/")
     def index(self):
-        return self.render('admin/index.html')
+        return self.render('admin/index.html', FlightStates=utils.flight_states())
 
 
 class LogoutView(BaseView):
-     @expose("/")
-     def index(self):
-         logout_user()
-         return redirect("/admin")
+    @expose("/")
+    def index(self):
+        logout_user()
+        return redirect("/admin")
 
-     def is_accessible(self):
-         return current_user.is_authenticated and current_user.user_role.__eq__(UserRoleEnum.ADMIN)
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role.__eq__(UserRoleEnum.ADMIN)
 
+
+class StatesView(BaseView):
+    @expose("/")
+    def index(self):
+        # kw = request.args.get("kw")
+        # year = request.args.get("year", datetime.now())
+        return self.render('admin/states.html', revenue_states=utils.revenue_states())
+
+
+admin = Admin(app=app, name="QUẢN TRỊ ADMIN", template_mode="bootstrap4", index_view=MyAdminIndexView())
 
 admin.add_view(CustomerView(Customer, db.session, category="Person"))
 admin.add_view(EmployeeView(Employee, db.session, category="Person"))
@@ -104,11 +114,9 @@ admin.add_view(TicketClassView(TicketClass, db.session, category="Manage Ticket"
 admin.add_view(ReceiptView(Receipt, db.session, category="Bill"))
 admin.add_view(ReceiptDetailView(ReceiptDetail, db.session, category="Bill"))
 admin.add_view(SchedulesView(Schedules, db.session, category="Manage chedules"))
-admin.add_view(StopView(Stop, db.session,  category="Manage chedules"))
-admin.add_view(RouteView(Route, db.session))
-admin.add_view(FlightView(Flight, db.session))
-admin.add_view(AirportView(Airport, db.session))
+admin.add_view(StopView(Stop, db.session, category="Manage chedules"))
+admin.add_view(RouteView(Route, db.session, category="Manage Flight"))
+admin.add_view(FlightView(Flight, db.session, category="Manage Flight"))
+admin.add_view(AirportView(Airport, db.session, category="Manage Flight"))
+admin.add_view(StatesView(name="State"))
 admin.add_view(LogoutView(name="Đăng xuất"))
-
-
-
