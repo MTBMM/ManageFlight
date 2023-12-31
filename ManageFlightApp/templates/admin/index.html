@@ -1,27 +1,23 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Đăng nhập</title>
-</head>
+{% extends 'admin/master.html' %}
 
-<body>
-<h1 class="text-center text-info">ĐĂNG NHẬP</h1>
-<form method="post" action="/admin/login">
-  <div class="mb-3 mt-3">
-    <label for="username" class="form-label">Tên đăng nhập:</label>
-    <input type="text" class="form-control" id="username" placeholder="Tên đăng nhập" name="username">
-  </div>
-  <div class="mb-3">
-    <label for="pwd" class="form-label">Mật khẩu:</label>
-    <input type="password" class="form-control" id="pwd" placeholder="Mật khẩu" name="password">
-  </div>
+{% block body %}
 
-  <button type="submit" class="btn btn-primary">Đăng nhập</button>
-</form>
-</body>
-</html>
-
+        {% if not current_user.is_authenticated %}
+            <div class="container">
+                <h1 class="text-center">LOGIN</h1>
+                <form method="post" action="{{ url_for('sign_admin') }}">
+                    <div class="form-group">
+                        <input type="text" name="username" class="form-control" placeholder="Enter username..." />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Enter password..." />
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Login" class="btn btn-danger" />
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <h1>Welcome admin </h1>
+        {% endif %}
+{% endblock %}
