@@ -82,7 +82,8 @@ class EmployeeView(AuthenticatedView):
 class MyAdminIndexView(AdminIndexView):
     @expose("/")
     def index(self):
-        return self.render('admin/index.html', FlightStates=utils.flight_states())
+        month = request.args.get("month", datetime.now())
+        return self.render('admin/index.html', general_states=utils.General_States(m=month))
 
 
 class LogoutView(BaseView):
@@ -95,12 +96,25 @@ class LogoutView(BaseView):
         return current_user.is_authenticated and current_user.user_role.__eq__(UserRoleEnum.ADMIN)
 
 
-class StatesView(BaseView):
+class RevenueView(BaseView):
+    @expose("/")
+    def index(self):
+        return self.render('admin/RevenueStates.html', revenue_states=utils.revenue_states())
+
+
+class FlightStatesView(BaseView):
     @expose("/")
     def index(self):
         # kw = request.args.get("kw")
         # year = request.args.get("year", datetime.now())
-        return self.render('admin/states.html', revenue_states=utils.revenue_states())
+        return self.render('admin/FlightStates.html', FlightStates=utils.flight_states())
+
+class PercentView(BaseView):
+    @expose("/")
+    def index(self):
+        # kw = request.args.get("kw")
+        # year = request.args.get("year", datetime.now())
+        return self.render('admin/PercentStates.html', percent_states=utils.percent_states())
 
 
 admin = Admin(app=app, name="QUẢN TRỊ ADMIN", template_mode="bootstrap4", index_view=MyAdminIndexView())
@@ -118,5 +132,7 @@ admin.add_view(StopView(Stop, db.session, category="Manage chedules"))
 admin.add_view(RouteView(Route, db.session, category="Manage Flight"))
 admin.add_view(FlightView(Flight, db.session, category="Manage Flight"))
 admin.add_view(AirportView(Airport, db.session, category="Manage Flight"))
-admin.add_view(StatesView(name="State"))
+admin.add_view(FlightStatesView(name="FlightStates", category="States"))
+admin.add_view(PercentView(name="PercentStates", category="States"))
+admin.add_view(RevenueView(name="RevenueStates", category="States"))
 admin.add_view(LogoutView(name="Đăng xuất"))

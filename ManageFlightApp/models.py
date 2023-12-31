@@ -332,8 +332,6 @@ if __name__ == '__main__':
         # db.session.add_all([Sc1, Sc2, Sc3])
         # db.session.commit()
 
-        k = db.session.query(Route.name, func.sum(Receipt.unit_price)).join(Flight, Route.id == Flight.route_id).join(
-            Receipt, Flight.id == Receipt.flight_id).group_by(Route.name).all()
+        total_unit_price = db.session.query(func.sum(Receipt.unit_price)).scalar()
 
-        for c in k:
-            print(c)
+        print(f'Total Unit Price in Receipts: {total_unit_price}')
