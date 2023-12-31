@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, Enum, BOOLEAN, ForeignKey, FLOAT, DATETIME
+from sqlalchemy import Column, Integer, String, Enum, BOOLEAN, ForeignKey, FLOAT, DATETIME, func
 from sqlalchemy.orm import relationship
 from ManageFlightApp import Admin, db, app
 from flask_login import UserMixin
@@ -303,31 +303,37 @@ if __name__ == '__main__':
         db.session.add_all([Tp1, Tp2, Tp3, Tp4])
         db.session.commit()
 
-        T1 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=1, fight_id=1, ticket_class_id=1)
-        T2 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=2, fight_id=1, ticket_class_id=1)
-        T3 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=3, fight_id=1, ticket_class_id=1)
-        T4 = Ticket(purchase_time='2023-12-31 01:00:00', seat_id=16, fight_id=1, ticket_class_id=1)
-        T5 = Ticket(purchase_time='2023-12-31 01:00:00', seat_id=17, fight_id=1, ticket_class_id=1)
-        T6 = Ticket(purchase_time='2023-12-31 03:00:00', seat_id=18, fight_id=1, ticket_class_id=1)
-        T7 = Ticket(purchase_time='2023-12-31 03:0:00', seat_id=19, fight_id=1, ticket_class_id=1)
+        # T1 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=1, fight_id=1, ticket_class_id=1)
+        # T2 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=2, fight_id=1, ticket_class_id=1)
+        # T3 = Ticket(purchase_time='2023-12-31 02:00:00', seat_id=3, fight_id=1, ticket_class_id=1)
+        # T4 = Ticket(purchase_time='2023-12-31 01:00:00', seat_id=16, fight_id=1, ticket_class_id=1)
+        # T5 = Ticket(purchase_time='2023-12-31 01:00:00', seat_id=17, fight_id=1, ticket_class_id=1)
+        # T6 = Ticket(purchase_time='2023-12-31 03:00:00', seat_id=18, fight_id=1, ticket_class_id=1)
+        # T7 = Ticket(purchase_time='2023-12-31 03:0:00', seat_id=19, fight_id=1, ticket_class_id=1)
+        #
+        # db.session.add_all([T1, T2, T3, T4, T5, T6, T7])
+        # db.session.commit()
+        #
+        # rcd1 = ReceiptDetail(ticket_id=1, receipt_id=1)
+        # rcd2 = ReceiptDetail(ticket_id=2, receipt_id=1)
+        # rcd3 = ReceiptDetail(ticket_id=3, receipt_id=1)
+        # rcd4 = ReceiptDetail(ticket_id=4, receipt_id=2)
+        # rcd5 = ReceiptDetail(ticket_id=5, receipt_id=2)
+        # rcd6 = ReceiptDetail(ticket_id=6, receipt_id=3)
+        # rcd7 = ReceiptDetail(ticket_id=7, receipt_id=3)
+        #
+        # db.session.add_all([rcd1, rcd2, rcd3, rcd4, rcd5, rcd6, rcd7])
+        # db.session.commit()
+        #
+        # Sc1 = Schedules(plane_id=1, flight_id=1)
+        # Sc2 = Schedules(plane_id=2, flight_id=1)
+        # Sc3 = Schedules(plane_id=3, flight_id=1)
+        #
+        # db.session.add_all([Sc1, Sc2, Sc3])
+        # db.session.commit()
 
-        db.session.add_all([T1, T2, T3, T4, T5, T6, T7])
-        db.session.commit()
+        k = db.session.query(Route.name, func.sum(Receipt.unit_price)).join(Flight, Route.id == Flight.route_id).join(
+            Receipt, Flight.id == Receipt.flight_id).group_by(Route.name).all()
 
-        rcd1 = ReceiptDetail(ticket_id=1, receipt_id=1)
-        rcd2 = ReceiptDetail(ticket_id=2, receipt_id=1)
-        rcd3 = ReceiptDetail(ticket_id=3, receipt_id=1)
-        rcd4 = ReceiptDetail(ticket_id=4, receipt_id=2)
-        rcd5 = ReceiptDetail(ticket_id=5, receipt_id=2)
-        rcd6 = ReceiptDetail(ticket_id=6, receipt_id=3)
-        rcd7 = ReceiptDetail(ticket_id=7, receipt_id=3)
-
-        db.session.add_all([rcd1, rcd2, rcd3, rcd4, rcd5, rcd6, rcd7])
-        db.session.commit()
-
-        Sc1 = Schedules(plane_id=1, flight_id=1)
-        Sc2 = Schedules(plane_id=2, flight_id=1)
-        Sc3 = Schedules(plane_id=3, flight_id=1)
-
-        db.session.add_all([Sc1, Sc2, Sc3])
-        db.session.commit()
+        for c in k:
+            print(c)
