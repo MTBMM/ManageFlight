@@ -32,7 +32,7 @@ class TicketClassView(AuthenticatedView):
 
 
 class TicketView(AuthenticatedView):
-    column_filters = ["customer_id"]
+    column_filters = ["id"]
 
 
 class PlaneView(AuthenticatedView):
