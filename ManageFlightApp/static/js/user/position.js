@@ -1,10 +1,10 @@
 let seatArr = [];
 let price = 0;
-
-window.onload = function () {
-    loadOnClick();
-    hideBusi();
-};
+//
+//window.onload = function () {
+//    loadOnClick();
+//    hideBusi();
+//};
 
 function loadOnClick() {
     var listSeat = document.getElementsByClassName('seat-icon-check');

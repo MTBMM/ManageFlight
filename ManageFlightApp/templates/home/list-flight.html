@@ -1,295 +1,203 @@
-{% extends "home/layout/base.html" %}
+{%extends "user/layout/base.html"  %}
 
 {% block title %}
-<title>TRAVEL WITH MYCHU | Trang chủ</title>
+<title>FLIGHTS</title>
 {% endblock %}
 
-{% block heading %}
-Trang chủ
+{% block head_css %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+      integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+      integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+      integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.css"
+      integrity="sha512-GgUcFJ5lgRdt/8m5A0d0qEnsoi8cDoF0d6q+RirBPtL423Qsj5cI9OxQ5hWvPi5jjvTLM/YhaaFuIeWCLi6lyQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.css"
+      integrity="sha512-nNlU0WK2QfKsuEmdcTwkeh+lhGs6uyOxuUs+n+0oXSYDok5qy0EI0lt01ZynHq6+p/tbgpZ7P+yUb+r71wqdXg=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+      integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+      crossorigin="anonymous">
+
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css"
+      rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+<!-- Theme Style -->
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/font.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/hero.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/datepick.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/carousel.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user/list-flight.css') }}">
 {% endblock %}
 
 {% block content %}
-<body>
-<header>
-    <section class="banner" id="top">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-5">
-                    <div class="left-side">
+<body style="background-color: #7BCAFC;">
+<div class="lists-container col-md-12" style="margin: 20px 0px">
+    <div class="col-md-5 col-md-offset-1">
+        <section id="first-tab-group" class="tabgroup">
+            <div id="tab1">
+                <div class="submit-form">
+                    <h4>Check availability for <em>direction</em>:</h4>
+                    <form action="/list-flight" method="get">
                         <div class="row">
-                            <ul class="nav justify-content-end" style="font-weight: bold; height: 50px">
-                                <li class="nav-item">
-                                    <a class="nav-link logo-label disabled" href="/"
-                                       style="color: white; padding: 15px;">TRAVEL WITH
-                                        MYCHU</a>
-                                </li>
-                                {% if current_user.is_authenticated %}
-                                <li class="nav-item seat">
-                                    <i class="fa fa-cart-plus seat-icon seat-icon-empty"
-                                       aria-hidden="true" style="font-size: xx-large;"></i>
-                                </li>
-                                <li class="nav-item seat">
-                                    <i class="fa fa-user seat-icon seat-icon-empty"
-                                       aria-hidden="true" style="font-size: xx-large;"></i>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/logout" style="color: red; padding: 15px;">SIGN OUT</a>
-                                </li>
-                                {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/login" style="color: #0579C3; padding: 15px;">SIGN IN</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/register" style="color: red; padding: 15px;">SIGN UP</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                        <div class="tabs-content">
-                            <h4>Choose Your Direction:</h4>
-                            <ul class="social-links">
-                                <li><a href="https://www.facebook.com/tinhocmo">Find us on <em>Facebook</em><i
-                                        class="fa fa-facebook"></i></a></li>
-                                <li><a href="http://youtube.com/">Our <em>YouTube</em> Channel<i
-                                        class="fa fa-youtube"></i></a></li>
-                                <li><a href="http://instagram.com/">Follow our <em>instagram</em><i
-                                        class="fa fa-instagram"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="page-direction-button">
-                            <a href="contact.html"><i class="fa fa-phone"></i>Contact Us Now</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 col-md-offset-1">
-                    <section id="first-tab-group" class="tabgroup">
-                        <div id="tab1">
-                            <div class="submit-form">
-                                <h4>Check availability for <em>direction</em>:</h4>
-                                <form action="/list-flight" method="get">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <fieldset>
-                                                <label for="from">From:</label>
-                                                <select required name='from' onchange='this.form.()'>
-                                                    {% for a in airport %}
-                                                    <option value="{{ a.id }}" id="from">{{ a.name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <fieldset>
-                                                <label for="to">To:</label>
-                                                <select required name='to' onchange='this.form.()'>
-                                                    {% for a in airport %}
-                                                    <option value="{{ a.id }}" id="to">{{ a.name }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </fieldset>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <fieldset>
-                                                <label for="departure">Departure date:</label>
-                                                <input name="departure" type="date" class="form-control date"
-                                                       id="departure"
-                                                       value="{% if departure %}{{ departure.strftime('%Y-%m-%d') }}{% else %}{% endif %}"
-                                                       onchange='this.form.()' style="margin-top: 0px;">
-                                            </fieldset>
-                                        </div>
-                                        <!--                                        <div class="col-md-6">-->
-                                        <!--                                            <fieldset>-->
-                                        <!--                                                <label for="pos_type">Class:</label>-->
-                                        <!--                                                <select onchange='this.form.()'>-->
-                                        <!--                                                    <option value="">Select a location...</option>-->
-                                        <!--                                                    {% for c in pos_type %}-->
-                                        <!--                                                    <option value="{{ c.id }}" id="pos_type">{{ c.type_of_position_name }}</option>-->
-                                        <!--                                                    {% endfor %}-->
-                                        <!--                                                </select>-->
-                                        <!--                                            </fieldset>-->
-                                        <!--                                        </div>-->
-                                        <div class="col">
-                                            <fieldset>
-                                                <button type="submit" id="form-submit" class="btn">Order Ticket Now
-                                                </button>
-                                            </fieldset>
-                                        </div>
-                                    </div>
-                                </form>
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <label for="from">From:</label>
+                                    <select required name='from' onchange='this.form.()'>
+                                        {% for a in airport %}
+                                        <option value="{{ a.id }}" id="from">{{ a.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <label for="to">To:</label>
+                                    <select required name='to' onchange='this.form.()'>
+                                        {% for a in airport %}
+                                        <option value="{{ a.id }}" id="to">{{ a.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </fieldset>
+                            </div>
+                            <div class="col-md-6">
+                                <fieldset>
+                                    <label for="departure">Departure date:</label>
+                                    <input name="departure" type="date" class="form-control date"
+                                           id="departure"
+                                           value="{% if departure %}{{ departure.strftime('%Y-%m-%d') }}{% else %}{% endif %}"
+                                           onchange='this.form.()' style="margin-top: 0px;">
+                                </fieldset>
+                            </div>
+                            <!--                                        <div class="col-md-6">-->
+                            <!--                                            <fieldset>-->
+                            <!--                                                <label for="pos_type">Class:</label>-->
+                            <!--                                                <select onchange='this.form.()'>-->
+                            <!--                                                    <option value="">Select a location...</option>-->
+                            <!--                                                    {% for c in pos_type %}-->
+                            <!--                                                    <option value="{{ c.id }}" id="pos_type">{{ c.type_of_position_name }}</option>-->
+                            <!--                                                    {% endfor %}-->
+                            <!--                                                </select>-->
+                            <!--                                            </fieldset>-->
+                            <!--                                        </div>-->
+                            <div class="col">
+                                <fieldset>
+                                    <button type="submit" id="form-submit" class="btn">Order Ticket Now
+                                    </button>
+                                </fieldset>
                             </div>
                         </div>
-                    </section>
+                    </form>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
+</div>
+{% for f in flights %}
+{% for r in route %}
+<h2> {{ r.name }} </h2>
+{% endfor %}
+{% endfor %}
+<h2>{{ start_location }} </h2>
+<h2>hello</h2>
+<div class="row" style="margin: 0px">
+    {% if flights %}
+    {% for f in flights %}
+    <h2>{{ f.airplane.name }}</h2>
+    <div class="list col-md-6" style="padding: 0px; margin-left: 40px; width: 680px;" id="{{ f.id }}">
+        <div class="list-preview">
+            <section class="top-list">
+                <h6>FLIGHT</h6>
+                <h2 style="margin: 0px">{{ f.code }}</h2>
+            </section>
+            <section class="cities">
+                <div class="city">
+                    <small>{{ start_location }}</small>
 
-</header>
-<div class="container">
-    <div class="tabs-content" id="weather">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="section-heading">
-                        <h2>MOST VISITED PLACES</h2>
-                    </div>
+                    <h1 style="text-align: right">{{ f.route.code }}</h1>
                 </div>
-                <div class="wrapper">
-                    <div class="col-md-12">
-                        <div class="weather-content">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <ul class="tabs clearfix" data-tabgroup="second-tab-group">
-                                        <li><a href="#hcm" class="active">Hồ Chí Minh</a></li>
-                                        <li><a href="#hn">Hà Nội</a></li>
-                                        <li><a href="#dlk">ĐắK Lắk</a></li>
-                                        <li><a href="#hue">Huế</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-md-12">
-                                    <section id="second-tab-group" class="weathergroup">
-                                        <div id="hcm">
-                                            <div class="row">
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Địa điểm nổi tiếng</h6>
-                                                        <img class="img-re-place" src="./static/image/landmark.jpg">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Món ngon</h6>
-                                                        <img class="img-re-place" src="./static/image/comtam.png">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Khách sạn</h6>
-                                                        <img class="img-re-place" src="./static/image/kshcm.jpg">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="hn">
-                                            <div class="row">
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Địa điểm nổi tiếng</h6>
-                                                        <img class="img-re-place" src="./static/image/hotay.jpg">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Món ngon</h6>
-                                                        <img class="img-re-place" src="./static/image/buncha.jpg">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Khách sạn</h6>
-                                                        <img class="img-re-place" src="./static/image/kshn.jpg">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="dlk">
-                                            <div class="row">
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Địa điểm nổi tiếng</h6>
-                                                        <img class="img-re-place" src="./static/image/holak.jpg">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Món ngon</h6>
-                                                        <img class="img-re-place" src="./static/image/comlam.jpg">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Khách sạn</h6>
-                                                        <img class="img-re-place" src="./static/image/ksdlk.jpg">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="hue">
-                                            <div class="row">
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Địa điểm nổi tiếng</h6>
-                                                        <img class="img-re-place" src="./static/image/pchue.jpeg">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Món ngon</h6>
-                                                        <img class="img-re-place" src="./static/image/bunbohue.jpg">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4" style="padding: 0px 10px">
-                                                    <div class="weather-item">
-                                                        <h6>Khách sạn</h6>
-                                                        <img class="img-re-place" src="./static/image/kshue.jpg">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="city">
+                    <small>{{ location_from }}</small>
+
+                    <h1 style="text-align: right">{{ f.route.code }}</h1>
                 </div>
+                <svg class="airplane">
+                    <use xlink:href="#airplane"></use>
+                </svg>
+            </section>
+        </div>
+        <div class="list-info">
+            <div class="info-container">
+                <div class="info"><img src="./static/image/vnlogo.png" class="img"></div>
+                <h6></h6>
             </div>
+            <div class="info-price">
+                <h5>GIÁ TIỀN: <strong id="price" style="color: #FFD733">{{ "{:,.0f}".format(f.price) }}</strong>/người
+                </h5>
+            </div>
+            <button class="butn" style="background-color: #0579C3;"><a href="/load_pos"> CHOSE </a></button>
+            <section>
+                <div class="times">
+                    <div class="box">
+                        <small>Boarding</small>
+                        <strong>{{ f.start_time }}</strong>
+                    </div>
+                    <div class="box">
+                        <small>Departure</small>
+                        <strong>{{ f.start_time }}</strong>
+                    </div>
+                    <div class="box">
+                        <small>Duration</small>
+                        <strong>{{ f.start_time }}</strong>
+                    </div>
+                    <div class="box">
+                        <small>Arrival</small>
+                        <strong>{{ f.end_time }}</strong>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-
-    <section class="section testimonial-section" style="padding: 50px 0px">
-        <div class="container">
-            <div class="row justify-content-center text-center mb-5">
-                <div class="col-md-12">
-                    <div class="section-heading">
-                        <h2>COLLABORATION</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="js-carousel-2 owl-carousel mb-5">
-                    <div class="text-center slider-item">
-                        <div class="author-image col-sm-6">
-                            <img src="{{ url_for('static', filename='image/my.png') }}" alt="Image placeholder"
-                                 class="rounded-circle mx-auto">
-                        </div>
-                        <blockquote>
-                            <p>&ldquo;1951052121&rdquo;</p>
-                        </blockquote>
-                        <p><em>&mdash; Trần Thị Giáng My </em></p>
-                    </div>
-
-                    <div class="text-center slider-item">
-                        <div class="author-image col-sm-6">
-                            <img src="{{ url_for('static', filename='image/ngoc.png') }}" alt="Image placeholder"
-                                 class="rounded-circle mx-auto">
-                        </div>
-                        <blockquote>
-                            <p>&ldquo;1951052131&rdquo;</p>
-                        </blockquote>
-                        <p><em>&mdash; Nguyễn Hoàng Như Ngọc </em></p>
-                    </div>
-
-                </div>
-                <!-- END slider -->
-            </div>
-
-        </div>
-    </section>
+    {% endfor %}
+    {% else %}
+    <div>
+        <h3 class="text-danger">Không có chuyến bay nào!</h3>
+        <h4>Bạn vui lòng chọn ngày hoặc tuyến bay khác</h4>
+    </div>
+    {% endif %}
+</div>
 </div>
 </body>
-{% endblock %}
 
-{% block tail_js %}
-{{ super() }}
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<!-- -&#45;&#45;&#45;&#45;sgv-&#45;&#45;&#45;&#45;-->
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" display="none">
+    <symbol id="airplane" viewBox="243.5 245.183 25 21.633">
+        <g>
+            <path fill="#FFFF65" d="M251.966,266.816h1.242l6.11-8.784l5.711,0.2c2.995-0.102,3.472-2.027,3.472-2.308
+                              c0-0.281-0.63-2.184-3.472-2.157l-5.711,0.2l-6.11-8.785h-1.242l1.67,8.983l-6.535,0.229l-2.281-3.28h-0.561v3.566
+                              c-0.437,0.257-0.738,0.724-0.757,1.266c-0.02,0.583,0.288,1.101,0.757,1.376v3.563h0.561l2.281-3.279l6.535,0.229L251.966,266.816z
+                              "/>
+        </g>
+    </symbol>
+</svg>
+</body>
+
 {% endblock %}
