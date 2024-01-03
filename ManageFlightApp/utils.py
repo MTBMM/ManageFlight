@@ -50,7 +50,7 @@ def General_States(m):
 def register(name, username, password, avatar):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
     u = Customer(username=username.strip(),
-             password=password, avatar=avatar)
+                 password=password, avatar=avatar)
     db.session.add(u)
     db.session.commit()
 
@@ -59,4 +59,8 @@ def auth_user(username, password):
     password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
 
     return Customer.query.filter(Customer.username.__eq__(username.strip()),
-                             Customer.password.__eq__(password)).first()
+                                 Customer.password.__eq__(password)).first()
+
+
+def get_all_airport_names():
+    return db.session.query(Airport.name).all()

@@ -118,6 +118,8 @@ class PercentView(BaseView):
         return self.render('admin/PercentStates.html', percent_states=utils.percent_states())
 
 
+
+
 admin = Admin(app=app, name="QUẢN TRỊ ADMIN", template_mode="bootstrap4", index_view=MyAdminIndexView())
 
 admin.add_view(CustomerView(Customer, db.session, category="Person"))

@@ -332,6 +332,6 @@ if __name__ == '__main__':
         # db.session.add_all([Sc1, Sc2, Sc3])
         # db.session.commit()
 
-        # total_unit_price = db.session.query(func.sum(Receipt.unit_price)).scalar()
-        #
-        # print(f'Total Unit Price in Receipts: {total_unit_price}')
+
+
+

@@ -7,8 +7,8 @@ from ManageFlightApp import app, utils
 
 
 def index():
-    # airport = dao.load_airport()
-    return render_template('home/index.html')
+    airport = utils.get_all_airport_names()
+    return render_template('home/index.html', airport=airport)
 
 
 def list_flight_booking():
@@ -44,7 +44,7 @@ def register():
             try:
 
                 utils.register(username=request.form['username'],
-                             password=password, avatar=avatar)
+                               password=password, avatar=avatar)
                 print('thanfh cong')
 
                 return redirect('/login')
@@ -57,6 +57,7 @@ def register():
 
 def ticket():
     return render_template("ticket.html")
+
 
 def login():
     err_mgs = ""
@@ -78,6 +79,7 @@ def login():
 def logout_my_user():
     logout_user()
     return redirect('/')
+
 
 
 def sign_admin():
