@@ -20,6 +20,6 @@ cloudinary.config(
     api_key="647967525442925",
     api_secret="DyORc5iac39ghbqY6wKHYvBtSac"
 )
-admin = Admin(app=app, name="QUẢN TRỊ HÀNG HÀNG KHÔNG", template_mode="bootstrap4")
+# admin = Admin(app=app, name="QUẢN TRỊ HÀNG HÀNG KHÔNG", template_mode="bootstrap4")
 
 login = LoginManager(app=app)
