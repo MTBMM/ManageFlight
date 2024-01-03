@@ -2,7 +2,7 @@
 
 {% block body %}
             <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <table class="table">
                                 <tr>
                                     <td>Tên tuyến bay</td>
@@ -19,16 +19,16 @@
                                 {% endfor %}
                             </table>
                         </div>
-                        <form>
-                             <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input type="text" name="year" placeholder="Nhập năm..." class="form-control">
-                                    </div>
-                                        <input type="submit" value="Thống kê" class="btn btn-info">
-                             </div>
-                        </form>
+<!--                        <form>-->
+<!--                             <div class="col-md-4">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <input type="text" name="year" placeholder="Nhập năm..." class="form-control">-->
+<!--                                    </div>-->
+<!--                                        <input type="submit" value="Thống kê" class="btn btn-info">-->
+<!--                             </div>-->
+<!--                        </form>-->
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div>
                               <canvas id="MyProductChart"></canvas>
                             </div>
@@ -38,7 +38,7 @@
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
                   window.onload = function(){
-                             const ctx = document.getElementById('MyCategoryChart').getContext('2d')
+                             const ctx = document.getElementById('MyProductChart').getContext('2d')
                              let data = []
                              let labels = []
                              let r, g, b
@@ -56,34 +56,34 @@
 
                               loadChart(ctx, labels, data, 'line', colors, borderColors)
 
-                      }
+                    }
 
-function loadChart(ctx, labels, data, type, colors, borderColors){
+                function loadChart(ctx, labels, data, type, colors, borderColors){
 
-             new Chart(ctx, {
-                         type: type,
-                         data: {
-                               labels: labels,
-                               datasets: [{
-                                           label: '# of Votes',
-                                           data: data,
-                                           borderWidth: 1,
-                                           backgroundColor: colors,
-                                           borderColor:  borderColors
-                               }]
-                         },
-                               options:{
+                             new Chart(ctx, {
+                                         type: type,
+                                         data: {
+                                               labels: labels,
+                                               datasets: [{
+                                                           label: '# of Votes',
+                                                           data: data,
+                                                           borderWidth: 1,
+                                                           backgroundColor: colors,
+                                                           borderColor:  borderColors
+                                               }]
+                                         },
+                                               options:{
 
-                                           scales: {
-                                                     y: {
-                                                          beginAtZero: true
-                                                     }
-                                           }
+                                                           scales: {
+                                                                     y: {
+                                                                          beginAtZero: true
+                                                                     }
+                                                           }
 
-                               }
-              });
+                                               }
+                              });
 
- }
+                 }
             </script>
 
 
