@@ -45,3 +45,22 @@ def General_States(m):
             .join(Flight, Route.id == Flight.route_id)
             .join(Receipt, Flight.id == Receipt.flight_id).filter(extract('month', Receipt.created_date) == m)
             .group_by(Route.name, extract('month', Receipt.created_date)).all())
+
+
+def register(name, username, password, avatar):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
+    u = Customer(username=username.strip(),
+                 password=password, avatar=avatar)
+    db.session.add(u)
+    db.session.commit()
+
+
+def auth_user(username, password):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
+
+    return Customer.query.filter(Customer.username.__eq__(username.strip()),
+                                 Customer.password.__eq__(password)).first()
+
+
+def get_all_airport_names():
+    return db.session.query(Airport.name).all()
