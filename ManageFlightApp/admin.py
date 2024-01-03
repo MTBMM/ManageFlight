@@ -82,7 +82,7 @@ class EmployeeView(AuthenticatedView):
 class MyAdminIndexView(AdminIndexView):
     @expose("/")
     def index(self):
-        return self.render('admin/index.html', FlightStates=utils.flight_states())
+        return self.render('admin/Manage.html', FlightStates=utils.flight_states())
 
 
 class LogoutView(BaseView):

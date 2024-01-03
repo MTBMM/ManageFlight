@@ -7,7 +7,7 @@ from ManageFlightApp.models import *
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("Manage.html")
 
 
 @login.user_loader
