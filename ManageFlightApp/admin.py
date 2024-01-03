@@ -83,7 +83,7 @@ class MyAdminIndexView(AdminIndexView):
     @expose("/")
     def index(self):
         month = request.args.get("month", datetime.now())
-        return self.render('admin/index.html', general_states=utils.General_States(m=month))
+        return self.render('admin/Manage.html', general_states=utils.General_States(m=month))
 
 
 class LogoutView(BaseView):

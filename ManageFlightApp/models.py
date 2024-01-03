@@ -332,6 +332,26 @@ if __name__ == '__main__':
         # db.session.add_all([Sc1, Sc2, Sc3])
         # db.session.commit()
 
-        total_unit_price = db.session.query(func.sum(Receipt.unit_price)).scalar()
+        def extended_gcd(a, b):
+            if a == 0:
+                return b, 0, 1
+            else:
+                g, x, y = extended_gcd(b % a, a)
+                return g, y - (b // a) * x, x
 
-        print(f'Total Unit Price in Receipts: {total_unit_price}')
+
+        def modinv(a, m):
+            g, x, y = extended_gcd(a, m)
+            if g != 1:
+                raise Exception(f'{a} không có số nghịch đảo modulo {m}')
+            else:
+                return x % m
+
+
+        # Tìm số nghịch đảo modulo 26 của các số từ 1 đến 50
+        for i in range(1, 51):
+            try:
+                inv = modinv(i, 26)
+                print(f"Số nghịch đảo modulo 26 của {i} là {inv}")
+            except Exception as e:
+                print(e)
