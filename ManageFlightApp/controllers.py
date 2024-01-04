@@ -18,8 +18,10 @@ def list_flight_booking():
     location_from = request.form['from']
     location_to = request.form['to']
     departure = request.form['departure']
-    import pdb
-    pdb.set_trace()
+    departure = request.form["departure"]
+    # import pdb
+    # pdb.set_trace()
+
     # flights = utils.get_flight(start_location=location_from, end_location=location_to, departure=departure)
     #
     # if flights
