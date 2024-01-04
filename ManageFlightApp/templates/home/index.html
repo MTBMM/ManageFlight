@@ -73,7 +73,7 @@ Trang chủ
                                                 <label for="from">From:</label>
                                                 <select required name='from' onchange='this.form.()'>
                                                     {% for a in airport %}
-                                                    <option value="{{ a.id }}" id="from">{{ a.name }}</option>
+                                                    <option value="{{ a.name }}" id="from">{{ a.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </fieldset>
@@ -83,7 +83,7 @@ Trang chủ
                                                 <label for="to">To:</label>
                                                 <select required name='to' onchange='this.form.()'>
                                                     {% for a in airport %}
-                                                    <option value="{{ a.id }}" id="to">{{ a.name }}</option>
+                                                    <option value="{{ a.name }}" id="to">{{ a.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </fieldset>
