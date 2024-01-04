@@ -67,6 +67,7 @@ class Ticket(db.Model):
 class Plane(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=True)
+    # flight_id = relationship('Flight', backref='plane', lazy=True)
 
 
 class Receipt(db.Model):
@@ -133,6 +134,7 @@ if __name__ == '__main__':
         db.create_all()
 
         import hashlib
+
 
         # u1 = Employee(name='Admin', username='admin',
         #               password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()), salary=50000000,
@@ -331,7 +333,4 @@ if __name__ == '__main__':
         #
         # db.session.add_all([Sc1, Sc2, Sc3])
         # db.session.commit()
-
-
-
 

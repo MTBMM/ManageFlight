@@ -71,7 +71,7 @@ Trang chủ
                                         <div class="col-md-6">
                                             <fieldset>
                                                 <label for="from">From:</label>
-                                                <select required name='from' onchange='this.form.()'>
+                                                <select name='from' onchange='this.form.()'>
                                                     {% for a in airport %}
                                                     <option value="{{ a.id }}" id="from">{{ a.name }}</option>
                                                     {% endfor %}
@@ -93,7 +93,7 @@ Trang chủ
                                                 <label for="departure">Departure date:</label>
                                                 <input name="departure" type="date" class="form-control date"
                                                        id="departure"
-                                                       value="{% if departure %}{{ departure.strftime('%Y-%m-%d') }}{% else %}{% endif %}"
+                                                       value="{% if departure %}{{ departure.strftime('%y-%m-%d') }}{% else %}{% endif %}"
                                                        onchange='this.form.()' style="margin-top: 0px;">
                                             </fieldset>
                                         </div>
