@@ -63,7 +63,7 @@ def auth_user(username, password):
 
 
 def get_all_airport_names():
-    return db.session.query(Airport.name).all()
+    return db.session.query(Airport.id, Airport.name).all()
 
 
 def get_route():
