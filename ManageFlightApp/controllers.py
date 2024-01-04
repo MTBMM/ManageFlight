@@ -17,9 +17,10 @@ def list_flight_booking():
 
     location_from = request.form['from']
     location_to = request.form['to']
+    departure = request.form['departure']
     departure = request.form["departure"]
-    import pdb
-    pdb.set_trace()
+    # import pdb
+    # pdb.set_trace()
 
     # flights = utils.get_flight(start_location=location_from, end_location=location_to, departure=departure)
     #
@@ -48,7 +49,7 @@ def register():
 
                 utils.register(username=request.form['username'],
                                password=password, avatar=avatar)
-                print('thanfh cong')
+                print('thành cong')
 
                 return redirect('/login')
             except:
@@ -82,7 +83,6 @@ def login():
 def logout_my_user():
     logout_user()
     return redirect('/')
-
 
 
 def sign_admin():

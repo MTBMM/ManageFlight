@@ -66,15 +66,16 @@ Trang chủ
                         <div id="tab1">
                             <div class="submit-form">
                                 <h4>Check availability for <em>direction</em>:</h4>
+                                <form enctype="multipart/form-data" action="/list-flight" method="post">
                                 <form action="/list-flight" method="post" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <fieldset>
                                                 <label for="from">From:</label>
-                                                <select required name="from">
+                                                <select required name='from' onchange='this.form.()'>
                                                     {% for a in airport %}
-                                                    <option value="{{ a.name }}" id="from">{{ a.name }}</option>
-                                                    {% endfor %}
+                                                    <option value="{{ a.name}}" id="from">{{ a.name }}</option>
+                                                     {% endfor %}
                                                 </select>
                                             </fieldset>
                                         </div>
