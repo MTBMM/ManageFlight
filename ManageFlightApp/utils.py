@@ -85,4 +85,5 @@ def get_flight(start_location, end_location, departure):
             .join(TicketClass, TicketPrice.ticket_class_id == TicketClass.id)
             .filter(Route.departure_id.__eq__(de_id), Route.arrival_id.__eq__(ar_id),
                     Flight.departure_time.__eq__(departure))
+            .all()
             )

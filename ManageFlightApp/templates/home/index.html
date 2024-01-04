@@ -66,14 +66,14 @@ Trang chủ
                         <div id="tab1">
                             <div class="submit-form">
                                 <h4>Check availability for <em>direction</em>:</h4>
-                                <form action="/list-flight" method="get">
+                                <form enctype="multipart/form-data" action="/list-flight" method="post">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <fieldset>
                                                 <label for="from">From:</label>
-                                                <select name='from' onchange='this.form.()'>
+                                                <select required name='from' onchange='this.form.()'>
                                                     {% for a in airport %}
-                                                    <option value="{{ a.id }}" id="from">{{ a.name }}</option>
+                                                    <option value="{{ a.name}}" id="from">{{ a.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </fieldset>
@@ -83,7 +83,7 @@ Trang chủ
                                                 <label for="to">To:</label>
                                                 <select required name='to' onchange='this.form.()'>
                                                     {% for a in airport %}
-                                                    <option value="{{ a.id }}" id="to">{{ a.name }}</option>
+                                                    <option value="{{ a.name }}" id="to">{{ a.name }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </fieldset>
