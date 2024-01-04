@@ -12,17 +12,20 @@ def index():
 
 
 def list_flight_booking():
-    # airport = dao.load_airport()
-    # route = dao.load_route()
+    airport = utils.get_all_airport_names()
+    route = utils.get_route()
 
-    location_from = request.args.get('from')
-    location_to = request.args.get('to')
-    departure = request.args.get('departure')
-    # flights = dao.load_flight_booking(start_location=location_from, end_location=location_to, departure=departure)
+    location_from = request.form['from']
+    location_to = request.form['to']
+    departure = request.form["departure"]
+    import pdb
+    pdb.set_trace()
 
+    # flights = utils.get_flight(start_location=location_from, end_location=location_to, departure=departure)
+    #
     # if flights
     # price_eco = flights
-    return render_template('home/list-flight.html')
+    return render_template('home/list-flight.html', airport=airport)
 
 
 def load_pos():

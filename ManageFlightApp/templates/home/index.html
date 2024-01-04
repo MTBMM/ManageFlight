@@ -66,12 +66,12 @@ Trang chủ
                         <div id="tab1">
                             <div class="submit-form">
                                 <h4>Check availability for <em>direction</em>:</h4>
-                                <form action="/list-flight" method="get">
+                                <form action="/list-flight" method="post" enctype="multipart/form-data">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <fieldset>
                                                 <label for="from">From:</label>
-                                                <select required name='from' onchange='this.form.()'>
+                                                <select required name="from">
                                                     {% for a in airport %}
                                                     <option value="{{ a.name }}" id="from">{{ a.name }}</option>
                                                     {% endfor %}
@@ -81,7 +81,7 @@ Trang chủ
                                         <div class="col-md-6">
                                             <fieldset>
                                                 <label for="to">To:</label>
-                                                <select required name='to' onchange='this.form.()'>
+                                                <select required name="to">
                                                     {% for a in airport %}
                                                     <option value="{{ a.name }}" id="to">{{ a.name }}</option>
                                                     {% endfor %}
@@ -93,21 +93,11 @@ Trang chủ
                                                 <label for="departure">Departure date:</label>
                                                 <input name="departure" type="date" class="form-control date"
                                                        id="departure"
-                                                       value="{% if departure %}{{ departure.strftime('%Y-%m-%d') }}{% else %}{% endif %}"
+                                                       value="{% if departure %}{{ departure.strftime('%y-%m-%d') }}{% else %}{% endif %}"
                                                        onchange='this.form.()' style="margin-top: 0px;">
                                             </fieldset>
                                         </div>
-                                        <!--                                        <div class="col-md-6">-->
-                                        <!--                                            <fieldset>-->
-                                        <!--                                                <label for="pos_type">Class:</label>-->
-                                        <!--                                                <select onchange='this.form.()'>-->
-                                        <!--                                                    <option value="">Select a location...</option>-->
-                                        <!--                                                    {% for c in pos_type %}-->
-                                        <!--                                                    <option value="{{ c.id }}" id="pos_type">{{ c.type_of_position_name }}</option>-->
-                                        <!--                                                    {% endfor %}-->
-                                        <!--                                                </select>-->
-                                        <!--                                            </fieldset>-->
-                                        <!--                                        </div>-->
+
                                         <div class="col">
                                             <fieldset>
                                                 <button type="submit" id="form-submit" class="btn">Order Ticket Now

@@ -6,7 +6,7 @@ app.add_url_rule("/register", 'register', controllers.register, methods=['get', 
 app.add_url_rule('/login', 'login', controllers.login, methods=['get', 'post'])
 app.add_url_rule('/logout', 'logout', controllers.logout_my_user)
 app.add_url_rule('/sign_admin', 'sign_admin', controllers.sign_admin, methods=['post'])
-app.add_url_rule('/list-flight', 'list-flight', controllers.list_flight_booking, methods=['get'])
+app.add_url_rule('/list-flight', 'list-flight', controllers.list_flight_booking, methods=['get', 'post'])
 app.add_url_rule('/load_pos', 'load_pos', controllers.load_pos, methods=['get'])
 app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])
 

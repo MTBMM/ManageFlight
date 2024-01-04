@@ -63,4 +63,26 @@ def auth_user(username, password):
 
 
 def get_all_airport_names():
-    return db.session.query(Airport.name).all()
+    return db.session.query(Airport.id, Airport.name).all()
+
+
+def get_route():
+    return (db.session.query(Route.name, Airport.location, Flight.id).join(Airport, Airport.id == Route.departure_id)
+            .join(Flight, Flight.id == Route.id)
+            )
+
+
+def get_airport_id(f):
+    return db.session.query(Airport.id).filter(Airport.name.__eq__(f))
+
+
+def get_flight(start_location, end_location, departure):
+    de_id = get_airport_id(start_location)
+    ar_id = get_airport_id(end_location)
+    return (db.session.query(Flight, TicketPrice.price, Flight.departure_time, Flight.arrival_time)
+            .join(Route, Flight.route_id == Route.id)
+            .join(Airport, Airport.id == Route.departure_id).join(TicketPrice, Flight.id == TicketPrice.flight_id)
+            .join(TicketClass, TicketPrice.ticket_class_id == TicketClass.id)
+            .filter(Route.departure_id.__eq__(de_id), Route.arrival_id.__eq__(ar_id),
+                    Flight.departure_time.__eq__(departure))
+            )
