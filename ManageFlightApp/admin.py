@@ -82,7 +82,6 @@ class EmployeeView(AuthenticatedView):
 class MyAdminIndexView(AdminIndexView):
     @expose("/")
     def index(self):
-        return self.render('admin/Manage.html', FlightStates=utils.flight_states())
         month = request.args.get("month", datetime.now())
         return self.render('admin/Manage.html', general_states=utils.General_States(m=month))
 
@@ -121,7 +120,6 @@ class PercentView(BaseView):
 
 
 admin = Admin(app=app, name="QUẢN TRỊ ADMIN", template_mode="bootstrap4", index_view=MyAdminIndexView())
-
 admin.add_view(CustomerView(Customer, db.session, category="Person"))
 admin.add_view(EmployeeView(Employee, db.session, category="Person"))
 admin.add_view(SeatView(Seat, db.session, category="Manage Ticket"))
