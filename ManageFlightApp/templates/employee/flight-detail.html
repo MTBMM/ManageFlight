@@ -41,7 +41,7 @@
             <input type="text" class="form-control" name="rate2" id="inputState">
           </div>
             {% for p in stops %}
-             {% if p.route_id == flight_detail.Route.id %}
+             {% if p.flight_id == flight_detail.Flight.id %}
          <div class="col-md-6">
             <label for="inputCity" class="form-label"> sân bay trung gian </label>
             <input type="text" class="form-control" value="{{ p.airport.name }}" name="airport1" id="inputCity">

@@ -48,4 +48,4 @@ def get_detail_flight(flight_id):
 
 
 def get_stops():
-    return db.session.query(Stop).filter(Route.id.__eq__(Stop.route_id)).all()
+    return db.session.query(Stop).filter(Flight.id.__eq__(Stop.flight_id)).all()

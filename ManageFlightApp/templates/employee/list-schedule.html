@@ -95,9 +95,9 @@
                                         <th scope="col">Điểm đến</th>
                                         <th scope="col">Ngày khởi hành</th>
                                         <th scope="col">Ngày đến</th>
+                                        <th scope="col">Sửa</th>
 
                                         <th scope="col">Xóa</th>
-                                        <th scope="col">Sửa</th>
 
                                     </tr>
                                 </thead>
@@ -111,13 +111,15 @@
                                         <td>{{ flight.arrival_time  }}</td>
                                         <td>
                                             <a href="{{ url_for('flight_detail', flight_id=flight.id) }}">
-                                                <i class="fa-solid fa-trash"></i>
+                                                <i class="fa-sharp fa-solid fa-pen"></i>
                                             </a>
                                         </td>
                                         <td>
                                             <a class="nav-link mx-lg-2" data-bs-toggle="modal"
-                                                data-bs-target="#staticBackdrop" href="{{ url_for('flight_detail') }}"><i
-                                                    class="fa-sharp fa-solid fa-pen"></i></a>
+                                                data-bs-target="#staticBackdrop" href="{{ url_for('flight_detail') }}">
+                                                <i class="fa-solid fa-trash"></i>
+
+                                            </a>
 
 
                                         </td>
