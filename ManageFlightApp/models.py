@@ -53,7 +53,8 @@ class Flight(db.Model):
 class TicketClass(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
-    quantity = Column(Integer, default=0)  # Số lượng hạng vé
+    quantity = Column(Integer, default=0)  # Số lượng  ghé)
+    ticket_class = relationship("Ticket", backref="ticket_class", lazy=False)
 
 
 class Ticket(db.Model):
@@ -343,6 +344,7 @@ if __name__ == '__main__':
         #             )
 
         #
+
         # def get_airport_id(f):
         #     return db.session.query(Airport.id).filter(Airport.name.__eq__(f)).first()
         #
@@ -439,5 +441,44 @@ if __name__ == '__main__':
         #     print(f"Route distance: {route.distance} km")
         #     print("\n")
 
-        de = db.session.query(Airport).filter(Airport.name.__eq__("Hà Nội")).first()
-        print(de.name)
+        # de = db.session.query(Airport).filter(Airport.name.__eq__("Hà Nội")).first()
+        # print(de.name)
+        # def get_flight(start_location, end_location, departure):
+        #     de_id = get_airport_id(start_location)
+        #     ar_id = get_airport_id(end_location)
+        #     return (db.session.query(Flight, Route.name, TicketPrice.price,
+        #                              func.time(Flight.departure_time).label('departure_time'),
+        #                              func.time(Flight.arrival_time).label('arrival_time')
+        #                              )
+        #             .join(Route, Flight.route_id == Route.id)
+        #             .join(Airport, Airport.id == Route.departure_id).join(TicketPrice,
+        #                                                                   Flight.id == TicketPrice.flight_id)
+        #             .join(TicketClass, TicketPrice.ticket_class_id == TicketClass.id)
+        #             .filter(Route.departure_id.__eq__(de_id[0]), Route.arrival_id.__eq__(ar_id[0]),
+        #                     func.date_format(Flight.departure_time, '%Y-%m-%d') == departure)
+        #             .all()
+        #             )
+        #
+        # k = get_flight("TP.HCM", "Hà Nội", "2023-12-31")
+        # for a in k:
+        #     print(a)
+        departure_airport_alias = aliased(Airport)
+        arrival_airport_alias = aliased(Airport)
+        list_flight = db.session.query(
+            Flight,
+            Route,
+            departure_airport_alias,
+            arrival_airport_alias,
+            Ticket
+
+        ).join(Route, Flight.route_id == Route.id).join(
+            departure_airport_alias, Route.departure_id == departure_airport_alias.id
+        ).join(
+            arrival_airport_alias, Route.arrival_id == arrival_airport_alias.id
+        ).join(Ticket, Flight.id == Ticket.fight_id).filter(Flight.id.__eq__(1)).first()
+        print(list_flight.Ticket.ticket_class.quantity)
+
+        stops = db.session.query(Stop).filter(Route.id.__eq__(Stop.route_id)).all()
+        for s in stops:
+            if s.route_id == list_flight.Route.id:
+                    print(s.airport.name)

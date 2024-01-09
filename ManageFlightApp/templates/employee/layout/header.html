@@ -18,10 +18,10 @@
                         </a>
                         <ul id="pages" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">Đặt vé</a>
+                                <a href="{{ url_for('employee_buy_ticket') }}" class="sidebar-link">Đặt vé</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="#" class="sidebar-link">Hủy vé</a>
+                                <a href="{{ url_for('list_buy_ticket') }}" class="sidebar-link">Danh sách đặc vé khách hàng</a>
                             </li>
                         </ul>
                     </li>
@@ -35,7 +35,7 @@
                                 <a href="{{ url_for('create_schedule') }}" class="sidebar-link">Lập lịch chuyến bay</a>
                             </li>
                             <li class="sidebar-item">
-                                <a href="{{ url_for('index_employee') }}" class="sidebar-link">Xem danh sách chuyến bay</a>
+                                <a href="{{ url_for('load_detail_flight') }}" class="sidebar-link">Xem danh sách chuyến bay</a>
                             </li>
                         </ul>
                     </li>

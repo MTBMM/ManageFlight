@@ -20,6 +20,7 @@ class FlightView(AuthenticatedView):
 
 class CustomerView(AuthenticatedView):
     column_filters = ["username"]
+    column_list = ['customer']
 
 
 class SeatView(AuthenticatedView):
@@ -29,18 +30,22 @@ class SeatView(AuthenticatedView):
 
 class TicketClassView(AuthenticatedView):
     column_filters = ["name"]
+    column_list = ["id", "ticket_class"]
 
 
 class TicketView(AuthenticatedView):
     column_filters = ["id"]
+    column_list = ["ticket_class"]
 
 
 class PlaneView(AuthenticatedView):
     column_filters = ["name"]
+    column_list = ["seat"]
 
 
 class ReceiptView(AuthenticatedView):
     column_searchable_list = ["created_date", "id"]
+    column_list = ["customer"]
 
 
 class ReceiptDetailView(AuthenticatedView):

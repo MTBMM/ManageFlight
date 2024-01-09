@@ -11,6 +11,13 @@ app.add_url_rule('/load_pos', 'load_pos', controllers.load_pos, methods=['get'])
 app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])
 app.add_url_rule('/employee', 'index_employee', employee.index_employee, methods=['get'])
 app.add_url_rule('/create_schedule', 'create_schedule', employee.create_schedule, methods=['get', 'post'])
+app.add_url_rule('/list_buy_ticket', 'list_buy_ticket', employee.list_buy_ticket, methods=['get'])
+app.add_url_rule('/employee_buy_ticket', 'employee_buy_ticket', employee.employee_buy_ticket, methods=['get'])
+app.add_url_rule('/load_detail_flight', 'load_detail_flight', employee.load_detail_flight,
+                 methods=['get'])
+
+app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
+                 methods=['get'])
 
 
 # app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])
