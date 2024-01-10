@@ -42,3 +42,22 @@ function showAdd() {
             document.getElementById("busi-seat").style.display = "flex";
     }
 }
+
+// script.js
+document.addEventListener('DOMContentLoaded', function () {
+   {% for f in flights %}
+      var btnToggleDetails{{ f.id }} = document.getElementById('btnToggleDetails{{ f.id }}');
+      var collapseExample{{ f.id }} = document.getElementById('collapseExample{{ f.id }}');
+
+      btnToggleDetails{{ f.id }}.addEventListener('click', function () {
+         // Kiểm tra trạng thái hiện tại và thay đổi
+         if (collapseExample{{ f.id }}.classList.contains('show')) {
+            // Nếu đang hiển thị, ẩn đi
+            collapseExample{{ f.id }}.classList.remove('show');
+         } else {
+            // Nếu đang ẩn, hiển thị lên
+            collapseExample{{ f.id }}.classList.add('show');
+         }
+      });
+   {% endfor %}
+});
