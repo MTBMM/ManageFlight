@@ -20,13 +20,13 @@ def list_flight_booking():
     # import pdb
     # pdb.set_trace()
 
-    route = utils.get_route(start_location=location_from, end_location=location_to)
-    flights = utils.get_flight(start_location=location_from, end_location=location_to, departure=departure)
+    flights = utils.get_flight_details(start_location=location_from, end_location=location_to, departure=departure)
 
     # if flights
     # price_eco = flights
     return render_template('user/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to)
+
 
 
 def load_pos():
