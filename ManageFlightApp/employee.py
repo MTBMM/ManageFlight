@@ -17,6 +17,7 @@ def create_schedule():
         rate2 = request.form["rate2"]
         airport1 = request.form["airport1"]
         time_delay1 = request.form["time_delay1"]
+        # quantity_airport = request.form["quantity_airport"]
     return render_template("employee/schedule.html", airport=utils.get_all_airport_names())
 
 

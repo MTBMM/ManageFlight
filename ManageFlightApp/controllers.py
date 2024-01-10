@@ -25,7 +25,7 @@ def list_flight_booking():
 
     # if flights
     # price_eco = flights
-    return render_template('home/list-flight.html', airport=airport, flights=flights,
+    return render_template('user/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to)
 
 

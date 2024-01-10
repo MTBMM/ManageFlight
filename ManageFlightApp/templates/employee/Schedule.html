@@ -36,10 +36,17 @@
             <label for="inputState" class="form-label">Số lượng ghế hạng 2</label>
             <input type="text" class="form-control" name="rate2" id="inputState">
           </div>
-
-         <div class="col-md-6">
-            <label for="inputCity" class="form-label">Sân bay trung gian </label>
-            <input type="text" class="form-control" name="airport1" id="inputCity">
+             <div class="col-md-12">
+            <label for="inputState" class="form-label">Số lượng sân bay trung gian</label>
+            <input type="text" class="form-control" name="quantity_airport" id="inputState">
+                 <a> submit </a>
+          </div>
+         <div class="col-md-6" style="margin-top: 43px">
+              <select required name='airport1' id="inputState" class="form-select">
+                {% for a in airport %}
+                    <option value="{{ a.name}}" id="air">{{ a.name }}</option>
+                {% endfor %}
+             </select>
           </div>
           <div class="col-md-6">
             <label for="inputState" class="form-label">Thời gian dừng</label>
