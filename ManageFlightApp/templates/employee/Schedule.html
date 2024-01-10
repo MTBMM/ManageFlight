@@ -1,9 +1,17 @@
 {% extends 'employee/layout/base.html' %}
 
 {% block content %}
+    {% if err_msg %}
+        <div class="alert alert-success" role="alert">
+               {{ err_msg }}
+        </div>
+    {% else %}
+        <div class="alert alert-danger">
+            Not Success
+        </div>
+    {% endif %}
     <div class="container" style="background-color: white; margin-top: 30px; width:50%; height:80%; border-radius:10px">
          <form class="row g-3" enctype="multipart/form-data" style="margin-top:10px" action="{{ url_for('create_schedule') }}" method="post">
-
       <div class="col-md-6">
           <label for="inputState" class="form-label">từ đâu</label>
           <select required name='from' id="inputState" class="form-select">
@@ -41,17 +49,30 @@
             <input type="text" class="form-control" name="quantity_airport" id="inputState">
                  <a> submit </a>
           </div>
-         <div class="col-md-6" style="margin-top: 43px">
-              <select required name='airport1' id="inputState" class="form-select">
-                {% for a in airport %}
-                    <option value="{{ a.name}}" id="air">{{ a.name }}</option>
-                {% endfor %}
-             </select>
-          </div>
-          <div class="col-md-6">
-            <label for="inputState" class="form-label">Thời gian dừng</label>
-            <input type="text" class="form-control" name="time_delay1" id="inputState">
-          </div>
+            <div class="row">
+                <div class="col-md-3" style="margin-top: 25px">
+                 <label for="inputState" class="form-label">Sân bay trung gian</label>
+
+                  <select required name='airport1' id="inputState" class="form-select">
+                    {% for a in airport %}
+                        <option value="{{ a.name}}" id="air">{{ a.name }}</option>
+                    {% endfor %}
+                 </select>
+              </div>
+                 <div class="col-md-3" style="margin-top: 25px">
+                <label for="inputState" class="form-label">Ngày đến</label>
+                <input type="date" class="form-control" name="arr_date" id="inputState">
+              </div>
+              <div class="col-md-3">
+                <label for="inputState" class="form-label">Thời gian dừng tối thiệu </label>
+                <input type="text" class="form-control" name="time_delay_min" id="inputState">
+              </div>
+                <div class="col-md-3">
+                <label for="inputState" class="form-label">Thời gian dừng tối đa </label>
+                <input type="text" class="form-control" name="time_delay_max" id="inputState">
+              </div>
+
+            </div>
 
 
 

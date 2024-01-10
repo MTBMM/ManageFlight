@@ -3,7 +3,7 @@ from flask import render_template, url_for, request, redirect
 from cloudinary import uploader
 from flask_login import login_user, logout_user, login_required
 from ManageFlightApp.models import UserRoleEnum
-from ManageFlightApp import app, utils
+from ManageFlightApp import app, utils, UtilsEmployee
 
 
 def index():
@@ -21,11 +21,11 @@ def list_flight_booking():
     # pdb.set_trace()
 
     flights = utils.get_flight_details(start_location=location_from, end_location=location_to, departure=departure)
-
+    stops = UtilsEmployee.get_stops()
     # if flights
     # price_eco = flights
     return render_template('user/list-flight.html', airport=airport, flights=flights,
-                           start=location_from, end=location_to)
+                           start=location_from, end=location_to, stops=stops)
 
 
 

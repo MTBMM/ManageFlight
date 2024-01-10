@@ -24,7 +24,6 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Mã chuyến bay</th>
                                         <th scope="col">Điểm đi</th>
                                         <th scope="col">Điểm đến</th>
                                         <th scope="col">Ngày khởi hành</th>
@@ -35,13 +34,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    {% for fight, route, departure_airport_alias, arrival_airport_alias, ticket_price in flights %}
                                     <tr>
                                         <th scope="row"></th>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{{ departure_airport_alias.name }}</td>
+                                        <td>{{ arrival_airport_alias.name }}</td>
+                                        <td>{{ flight.departure_time }}</td>
+                                        <td>{{ flight.arrival_time }}</td>
                                         <td>
                                             <a href="" style="padding:10px; background-color: black; color:white; border-radius: 10%">
                                                 Đặc vế
@@ -49,6 +48,8 @@
                                         </td>
 
                                     </tr>
+
+                                    {% endfor %}
 
                                 </tbody>
 

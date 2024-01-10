@@ -4,6 +4,8 @@ from sqlalchemy import func, extract
 from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
+from sqlalchemy import func
+from sqlalchemy.orm import aliased
 
 
 def get_user_by_id(user_id):
@@ -80,8 +82,7 @@ def get_airport_id(f):
 
 
 from datetime import datetime
-from sqlalchemy import func
-from sqlalchemy.orm import aliased
+
 
 stop_alias = aliased(Stop)
 airport_alias = aliased(Airport)
