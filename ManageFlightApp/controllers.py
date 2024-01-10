@@ -23,7 +23,7 @@ def list_flight_booking():
     flights = utils.get_flight_details(start_location=location_from, end_location=location_to, departure=departure)
 
     return render_template('home/list-flight.html', airport=airport, flights=flights,
-                               start=location_from, end=location_to)
+                           start=location_from, end=location_to)
 
 
 def load_pos():
