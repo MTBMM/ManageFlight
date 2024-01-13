@@ -23,7 +23,7 @@ class Person(db.Model, UserMixin):
     __abstract__ = True
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=True)
-    username = Column(String(50), nullable=False, unique=True)
+    username = Column(String(50), nullable=False)
     password = Column(String(50), nullable=False)
     avatar = Column(String(100),
                     default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1688179242/hclq65mc6so7vdrbp7hz.jpg')
@@ -35,6 +35,7 @@ class Customer(Person):
     phone = Column(String(12), nullable=True)
     Identify = Column(String(20), nullable=True)
     receipts = relationship("Receipt", backref="customer", lazy=True)
+    ticket_customer = relationship("Ticket", backref="customer", lazy=True)
 
 
 class Employee(Person):
@@ -64,6 +65,7 @@ class Flight(db.Model):
 class TicketClass(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
+    ticket_class_price = relationship("TicketPrice", backref="ticket_class", lazy=True)
 
 
 class Ticket(db.Model):
@@ -73,6 +75,7 @@ class Ticket(db.Model):
     flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
     ticket_class_id = Column(Integer, ForeignKey(TicketClass.id), nullable=False)
     customer_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
+    detail_ticket = relationship("ReceiptDetail", backref="ticket", lazy=True)
 
 
 class Plane(db.Model):
@@ -87,10 +90,7 @@ class Receipt(db.Model):
     user_id = Column(Integer, ForeignKey(Customer.id), nullable=False)
     employee_id = Column(Integer, ForeignKey(Employee.id), nullable=False)
     quantity = Column(Integer, default=0)
-    ticket_class_id = Column(Integer, ForeignKey(TicketClass.id), nullable=False)
-    flight_id = Column(Integer, ForeignKey(Flight.id), nullable=False)
     unit_price = Column(FLOAT, default=0)
-
     detail_receipt = relationship("ReceiptDetail", backref="receipt", lazy=True)
 
 
@@ -147,6 +147,23 @@ if __name__ == '__main__':
         db.create_all()
 
 
+        def get_list_flight():
+            departure_airport_alias = aliased(Airport)
+            arrival_airport_alias = aliased(Airport)
+            list_flight = db.session.query(
+                Flight,
+                Route,
+                departure_airport_alias,
+                arrival_airport_alias,
+                TicketPrice
+            ).join(Route, Flight.route_id == Route.id).join(
+                departure_airport_alias, Route.departure_id == departure_airport_alias.id
+            ).join(
+                arrival_airport_alias, Route.arrival_id == arrival_airport_alias.id
+            ).join(TicketPrice, TicketPrice.flight_id == Flight.id).all()
+            return list_flight
+        k = get_list_flight()
+        print(k)
         # def get_list_flight():
         #     departure_airport_alias = aliased(Airport)
         #     arrival_airport_alias = aliased(Airport)
@@ -736,53 +753,53 @@ if __name__ == '__main__':
         # db.session.add_all([St1, St2, St3, St4, St5, St6, St7, St8, St9, St10, St12, St13, St14])
         # db.session.commit()
         #
-        # Rc1 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=3, ticket_class_id=1, flight_id=1,
+        # Rc1 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=3,
         #               quantity=3,
         #               unit_price=3600000)
-        # Rc2 = Receipt(created_date='2023-12-30 19:15:00', user_id=2, employee_id=2, ticket_class_id=2, flight_id=1,
+        # Rc2 = Receipt(created_date='2023-12-30 19:15:00', user_id=2, employee_id=2,
         #               quantity=2,
         #               unit_price=3000000)
-        # Rc3 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=3, ticket_class_id=2, flight_id=1,
+        # Rc3 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=3,
         #               quantity=2,
         #               unit_price=3000000)
         #
-        # Rc4 = Receipt(created_date='2023-12-30 09:45:00', user_id=4, employee_id=2, ticket_class_id=1, flight_id=2,
+        # Rc4 = Receipt(created_date='2023-12-30 09:45:00', user_id=4, employee_id=2,
         #               quantity=3,
         #               unit_price=5100000)
-        # Rc5 = Receipt(created_date='2023-12-30 19:15:00', user_id=2, employee_id=2, ticket_class_id=2, flight_id=2,
+        # Rc5 = Receipt(created_date='2023-12-30 19:15:00', user_id=2, employee_id=2,
         #               quantity=2,
         #               unit_price=4400000)
-        # Rc6 = Receipt(created_date='2023-12-22 21:10:00', user_id=7, employee_id=3, ticket_class_id=2, flight_id=2,
+        # Rc6 = Receipt(created_date='2023-12-22 21:10:00', user_id=7, employee_id=3,
         #               quantity=2,
         #               unit_price=4400000)
         #
-        # Rc7 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=2, ticket_class_id=1, flight_id=4,
+        # Rc7 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=2,
         #               quantity=3,
         #               unit_price=5100000)
-        # Rc8 = Receipt(created_date='2023-12-30 19:15:00', user_id=5, employee_id=3, ticket_class_id=2, flight_id=4,
+        # Rc8 = Receipt(created_date='2023-12-30 19:15:00', user_id=5, employee_id=3,
         #               quantity=2,
         #               unit_price=6400000)
-        # Rc9 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=2, ticket_class_id=2, flight_id=4,
+        # Rc9 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=2,
         #               quantity=2,
         #               unit_price=6400000)
         #
-        # Rc10 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=3, ticket_class_id=1, flight_id=6,
+        # Rc10 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=3,
         #                quantity=3,
         #                unit_price=5100000)
-        # Rc11 = Receipt(created_date='2023-12-30 19:15:00', user_id=4, employee_id=3, ticket_class_id=2, flight_id=6,
+        # Rc11 = Receipt(created_date='2023-12-30 19:15:00', user_id=4, employee_id=3,
         #                quantity=2,
         #                unit_price=4400000)
-        # Rc12 = Receipt(created_date='2023-12-22 21:10:00', user_id=6, employee_id=3, ticket_class_id=2, flight_id=6,
+        # Rc12 = Receipt(created_date='2023-12-22 21:10:00', user_id=6, employee_id=3,
         #                quantity=2,
         #                unit_price=4400000)
         #
-        # Rc13 = Receipt(created_date='2023-12-30 09:45:00', user_id=6, employee_id=3, ticket_class_id=1, flight_id=7,
+        # Rc13 = Receipt(created_date='2023-12-30 09:45:00', user_id=6, employee_id=3,
         #                quantity=3,
         #                unit_price=4500000)
-        # Rc14 = Receipt(created_date='2023-12-30 19:15:00', user_id=1, employee_id=3, ticket_class_id=2, flight_id=7,
+        # Rc14 = Receipt(created_date='2023-12-30 19:15:00', user_id=1, employee_id=3,
         #                quantity=2,
         #                unit_price=3600000)
-        # Rc15 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=3, ticket_class_id=2, flight_id=7,
+        # Rc15 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=3,
         #                quantity=2,
         #                unit_price=3600000)
         #

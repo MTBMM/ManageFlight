@@ -34,11 +34,11 @@
       </div>
           <div class="col-md-6">
             <label for="inputCity" class="form-label">Số lượng ghế hạng 1</label>
-            <input type="text" class="form-control" name="rate1" id="inputCity">
+            <input type="text" class="form-control" value="{{ flight_detail.Flight.quantity_class_1 }}" name="rate1" id="inputCity">
           </div>
           <div class="col-md-6">
             <label for="inputState" class="form-label">Số lượng ghế hạng 2</label>
-            <input type="text" class="form-control" name="rate2" id="inputState">
+            <input type="text" class="form-control" value="{{ flight_detail.Flight.quantity_class_1 }}" name="rate2" id="inputState">
           </div>
             {% for p in stops %}
              {% if p.flight_id == flight_detail.Flight.id %}
