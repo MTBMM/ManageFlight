@@ -1,8 +1,8 @@
 from ManageFlightApp.models import *
 import hashlib
 
-def get_list_flight():
 
+def get_list_flight():
     departure_airport_alias = aliased(Airport)
     arrival_airport_alias = aliased(Airport)
     list_flight = db.session.query(
@@ -106,6 +106,14 @@ def save_ticket(info):
     detail = ReceiptDetail(ticket=ticket, receipt=receipt)
     db.session.add(detail)
     db.session.commit()
+
+
+def delete_flight(flight_id):
+    list= db.session.query(Flight, Route, Stop).join(Flight, Flight.route_id == Route.id).\
+        join(Stop, Stop.route_id == Route.id)\
+        .filter(Flight.id.__eq__(flight_id)).first()
+    import pdb
+    pdb.set_trace()
 
 
 

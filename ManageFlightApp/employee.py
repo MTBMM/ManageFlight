@@ -177,3 +177,8 @@ def payment():
      except Exception as ex:
              return jsonify({"code": 400})
 
+
+def delete_flight(flight_id):
+    UtilsEmployee.delete_flight(flight_id=flight_id)
+
+
