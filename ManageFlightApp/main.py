@@ -1,5 +1,6 @@
-from flask import render_template
-from ManageFlightApp import app, controllers, utils, login
+from flask import render_template, session
+from flask_session import Session
+from ManageFlightApp import app, controllers, utils, login, employee
 
 app.add_url_rule("/", 'index', controllers.index, methods=['get', 'post'])
 app.add_url_rule("/register", 'register', controllers.register, methods=['get', 'post'])
@@ -9,26 +10,22 @@ app.add_url_rule('/sign_admin', 'sign_admin', controllers.sign_admin, methods=['
 app.add_url_rule('/list-flight', 'list-flight', controllers.list_flight_booking, methods=['get', 'post'])
 app.add_url_rule('/load_pos', 'load_pos', controllers.load_pos, methods=['get'])
 app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])
+app.add_url_rule('/employee', 'index_employee', employee.index_employee, methods=['get'])
+app.add_url_rule('/create_schedule', 'create_schedule', employee.create_schedule, methods=['get', 'post'])
+app.add_url_rule('/list_buy_ticket', 'list_buy_ticket', employee.list_buy_ticket, methods=['get'])
+app.add_url_rule('/employee_buy_ticket', 'employee_buy_ticket', employee.employee_buy_ticket, methods=['get'])
+app.add_url_rule('/load_detail_flight', 'load_detail_flight', employee.load_detail_flight,
+                 methods=['get'])
+
+app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
+                 methods=['get'])
 
 
 # app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])
 
-
 @app.route("/user")
 def user():
     return render_template('user/index.html')
-
-
-
-# @app.route("/login")
-# def login():
-#     return render_template('home/login.html')
-
-# @app.route("/list")
-# def list_flights():
-#     return render_template('home/list-flight.html')
-
-#
 
 
 @app.errorhandler(404)
@@ -41,6 +38,11 @@ def account():
     return render_template('user/account.html')
 
 
+app.config['SECRET_KEY'] = '123'
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
+
 @app.route("/info")
 def info():
     return render_template('user/ticket-info.html')
@@ -49,43 +51,6 @@ def info():
 @app.route("/confirm")
 def confirm():
     return render_template('user/confirm.html')
-
-#
-# @app.route("/manage-route")
-# def manage_routes():
-#     return render_template('admin/manage-route.html')
-#
-# @app.route("/manage-flight")
-# def manage_flights():
-#     return render_template('admin/manage-flight.html')
-#
-# @app.route("/manage-airplane")
-# def manage_airplanes():
-#     return render_template('admin/manage-airplane.html')
-#
-# @app.route("/manage-discount")
-# def manage_discounts():
-#     return render_template('admin/manage-discount.html')
-#
-# @app.route("/manage-pricing")
-# def manage_pricings():
-#     return render_template('admin/manage-pricing.html')
-#
-# @app.route("/manage-account")
-# def manage_accounts():
-#     return render_template('admin/manage-account.html')
-#
-# @app.route("/manage-booking")
-# def manage_bookings():
-#     return render_template('admin/manage-booking.html')
-#
-# @app.route("/manage-payment")
-# def manage_payments():
-#     return render_template('admin/manage-payment.html')
-#
-# @app.route("/manage-type-of-position")
-# def manage_type_of_positions():
-#     return render_template('admin/manage-type-of-position.html')
 
 
 @login.user_loader

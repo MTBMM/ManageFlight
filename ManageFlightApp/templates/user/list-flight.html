@@ -117,12 +117,16 @@
                 <!-- Example Code -->
 
     <p class="d-inline-flex gap-1">
-      <a id="btnToggleDetails{{ f.id }}" data-flight-id="{{ f.id }}"
-         data-ticket-class="{{ f.class_id }}" class="btn btn-primary collapsed"
-         data-bs-toggle="collapse" href="#collapseExample{{ f.id }}" role="button" aria-expanded="false"
-         aria-controls="collapseExample{{ f.id }}">
-   Xem chi tiết
-        </a>
+    <a id="btnToggleDetails{{ f.id }}_{{ f.class_id }}"
+       data-flight-id="{{ f.id }}"
+       data-class-id="{{ f.class_id }}"
+       class="btn btn-primary collapsed toggle-details"
+       data-bs-toggle="collapse" href="#collapseExample{{ f.id }}_{{ f.class_id }}"
+       role="button" aria-expanded="false"
+       aria-controls="collapseExample{{ f.id }}_{{ f.class_id }}">
+      Xem chi tiết
+    </a>
+</a>
     </p>
 
     <!-- End Example Code -->
@@ -160,28 +164,32 @@
         <!-- Example Code -->
 
     <div class="col-md-3" style="padding = 0px; margin-right = 0px;">
-
-    <div class="collapse" id="collapseExample{{ f.id }}" style="">
+    <div  class="collapse" id="collapseExample{{ f.id }}_{{ f.class_id }}" style="">
       <div class="card card-body">
         <section>
           <div class="times">
-            <div class="box">
-              <small>Điểm đi: </small>
-              <strong>{{ start }}</strong>
-            </div>
-            <div class="box">
-              <small>Điểm đến: </small>
-              <strong>{{end}}</strong>
-            </div>
-            <div class="box">
-              <small>Ngày khởi hành: </small>
-              <strong>{{f.departure_time}}</strong>
-            </div>
-            <div class="box">
-              <small>Ngày đến:</small>
-              <strong>{{f.arrival_time}}</strong>
-            </div>
-          </div>
+              <div class="row">
+                   <div class="box col-md-6">
+                      <small>Điểm đi: </small>
+                      <strong>{{ start }}</strong>
+                    </div>
+                    <div class="box  col-md-6">
+                      <small>Điểm đến: </small>
+                      <strong>{{end}}</strong>
+                    </div>
+              </div>
+              <div class="row">
+                   <div class="box col-md-6">
+                  <small>Ngày khởi hành: </small>
+                  <strong>{{f.departure_time}}</strong>
+                </div>
+                <div class="box col-md-6">
+                  <small>Ngày đến:</small>
+                  <strong>{{f.arrival_time}}</strong>
+                </div>
+             </div>
+              </div>
+
         </section>
         <div>
           <small>Hạng vé: </small>
@@ -194,25 +202,25 @@
         <div>
           <strong> </strong>
         </div>
-        <div>
-          <small>Thời điểm đến: </small>
-            <strong> </strong>
-        </div>
-        <div>
-          <small>Thời gian dừng: </small>
-            <strong>  </strong>
-        </div>
-        <div>
-          <strong> </strong>
-        </div>
-        <div>
-          <small>Thời điểm đến: </small>
-            <strong>  </strong>
-        </div>
-        <div>
-          <small>Thời gian dừng: </small>
-            <strong></strong>
-        </div>
+          {% for s in stops %}
+            {% if s.flight_id == f.id %}
+            <div>
+              <small></small>
+                <strong> Sân bay {{ s.airport.name }}</strong>
+            </div>
+           <div>
+              <small>Thời điểm đến: {{ s.arrival_time }}</small>
+                <strong> </strong>
+            </div>
+            <div>
+              <small>Thời gian dừng: {{ s.time_delay_min }} phút </small>
+                <strong>  </strong>
+            </div>
+            <div>
+              <strong> </strong>
+            </div>
+          {% endif %}
+       {% endfor %}
 
       </div>
     </div>

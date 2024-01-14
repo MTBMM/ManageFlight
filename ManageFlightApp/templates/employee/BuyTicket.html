@@ -1,0 +1,62 @@
+{% extends 'employee/layout/base.html'%}
+
+{% block content %}
+        <div class="container">
+            <nav class="navbar search navbar-expand-lg navbar-light bg-light ">
+
+                  <form class="d-flex Search_Box">
+                    <input class="form-control me-2" type="search" placeholder="Search" style="outline:none"
+                           aria-label="Search">
+                    <button class="btn btn-outline-success Search-Box_button" type="submit">Search</button>
+                  </form>
+
+          </nav>
+
+              <div class="card border-0">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                               Danh sách chuyến bay
+                            </h5>
+                            <h6 class="card-subtitle text-muted">
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Điểm đi</th>
+                                        <th scope="col">Điểm đến</th>
+                                        <th scope="col">Ngày khởi hành</th>
+                                        <th scope="col">Ngày đến</th>
+
+
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for fight, route, departure_airport_alias, arrival_airport_alias, ticket_price in flights %}
+                                    <tr>
+                                        <th scope="row"></th>
+                                        <td>{{ departure_airport_alias.name }}</td>
+                                        <td>{{ arrival_airport_alias.name }}</td>
+                                        <td>{{ flight.departure_time }}</td>
+                                        <td>{{ flight.arrival_time }}</td>
+                                        <td>
+                                            <a href="" style="padding:10px; background-color: black; color:white; border-radius: 10%">
+                                                Đặc vế
+                                            </a>
+                                        </td>
+
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+
+                            </table>
+                        </div>
+
+              </div>
+        </div>
+{% endblock %}

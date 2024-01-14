@@ -147,128 +147,171 @@ if __name__ == '__main__':
         db.create_all()
 
 
-        def get_airport_id(f):
-            return db.session.query(Airport.id).filter(Airport.name.__eq__(f)).first()
+        # def get_list_flight():
+        #     departure_airport_alias = aliased(Airport)
+        #     arrival_airport_alias = aliased(Airport)
+        #     list_flight = db.session.query(
+        #         Flight,
+        #         Route,
+        #         departure_airport_alias,
+        #         arrival_airport_alias,
+        #
+        #     ).join(Route, Flight.route_id == Route.id).join(
+        #         departure_airport_alias, Route.departure_id == departure_airport_alias.id
+        #     ).join(
+        #         arrival_airport_alias, Route.arrival_id == arrival_airport_alias.id
+        #     ).join(Stop, Stop.route_id == Route.id).all()
+        #     return list_flight
+        # k = get_list_flight()
+        # for flight, route, d, a in k:
+        #     print("tên tuyến bay: %s - %s", ( d.name))
+        # def get_airport_id(name):
+        #     return db.session.query(Airport.id).filter(Airport.name.__eq__(name)).first()
+        #
+        #
+        # def get_route(de_name, ar_name):
+        #     de_id = get_airport_id(de_name)
+        #     ar_id = get_airport_id(ar_name)
+        #     return db.session.query(Route.id).filter(Route.departure_id.__eq__(de_id[0]),
+        #                                              Route.arrival_id.__eq__(ar_id[0])).first()
+        # def get_airport_id(f):
+        #     return db.session.query(Airport.id).filter(Airport.name.__eq__(f)).first()
+
+        #
+        # from datetime import datetime
+        # from sqlalchemy import func
+        # from sqlalchemy.orm import aliased
+        #
+        # stop_alias = aliased(Stop)
+        # airport_alias = aliased(Airport)
+        #
+        #
+        # def get_stop_details(flight_ids):
+        #     stop_details = (
+        #         db.session.query(
+        #             Stop.flight_id.label('id'),
+        #             airport_alias.name.label('stop_airport_name'),
+        #             Stop.arrival_time.label('stop_arrival_time'),
+        #             Stop.time_delay_min.label('stop_delay_min'),
+        #             Stop.order.label('stop_order')
+        #         )
+        #         .join(airport_alias, airport_alias.id == Stop.airport_id)
+        #         .filter(Stop.id.in_(flight_ids))
+        #         .order_by(Stop.order)  # Sắp xếp theo thứ tự để đảm bảo đúng thứ tự
+        #         .all()
+        #     )
+
+        # r_id = get_route("TP.HCM", "Hà Nội")
+        # a1_id = get_airport_id("Đà Nẵng")
+        # a2_id = get_airport_id("Hải Phòng")
+        #
+        # print(r_id[0])
+        #
+        # flight1 = Flight(route_id=r_id[0], departure_time="2023-12-31",arrival_time="2023-12-31",
+        #                  quantity_class_1=21, quantity_class_2=13, number_of_airport=2)
+        #
+        # stop1 = Stop(route_id=r_id[0], airport_id=a1_id[0], arrival_time="2023-12-31", flight=flight1,
+        #              order=1, time_delay_max=30, time_delay_min=20)
+        # stop2 = Stop(route_id=r_id[0], airport_id=a2_id[0], arrival_time="2023-12-31", flight=flight1,
+        #              order=1, time_delay_max=30, time_delay_min=20)
+        #
+        # db.session.add_all([stop1, stop2])
+        # db.session.commit()
+        #     return stop_details
 
 
-        from datetime import datetime
-        from sqlalchemy import func
-        from sqlalchemy.orm import aliased
-
-        stop_alias = aliased(Stop)
-        airport_alias = aliased(Airport)
-
-
-        def get_stop_details(flight_ids):
-            stop_details = (
-                db.session.query(
-                    Stop.flight_id.label('id'),
-                    airport_alias.name.label('stop_airport_name'),
-                    Stop.arrival_time.label('stop_arrival_time'),
-                    Stop.time_delay_min.label('stop_delay_min'),
-                    Stop.order.label('stop_order')
-                )
-                .join(airport_alias, airport_alias.id == Stop.airport_id)
-                .filter(Stop.id.in_(flight_ids))
-                .order_by(Stop.order)  # Sắp xếp theo thứ tự để đảm bảo đúng thứ tự
-                .all()
-            )
-
-            return stop_details
-
-
-        def get_flight_details(start_location, end_location, departure):
-            de_id = get_airport_id(start_location)
-            ar_id = get_airport_id(end_location)
-
-            airport_alias = aliased(Airport)
-
-            subquery = (
-                db.session.query(
-                    Stop.flight_id.label('id'),
-                    func.group_concat(airport_alias.name).label('stop_airport_names'),
-                    func.group_concat(Stop.order).label('stop_orders')
-                )
-                .join(airport_alias, airport_alias.id == Stop.airport_id)
-                .group_by(Stop.flight_id)
-                .subquery()
-            )
-
-            result = (
-                db.session.query(
-                    Flight.id.label('id'),
-                    Route.name.label('route_name'),
-                    TicketPrice.price.label('ticket_price'),
-                    Route.departure_id.label('departure_airport_id'),
-                    Route.arrival_id.label('arrival_airport_id'),
-                    Route.distance.label('distance'),
-                    Flight.departure_time.label('departure_time'),
-                    Flight.arrival_time.label('arrival_time'),
-                    TicketClass.name.label('ticket_class_name'),
-                    TicketClass.id.label('class_id'),
-                    Flight.number_of_airport.label('num_stops'),
-                    subquery.c.stop_airport_names.label('stop_airport_names'),
-                    subquery.c.stop_orders.label('stop_orders'),
-                    subquery.c.stop_orders.label('stop_arrival_time')
-                )
-                .join(Flight, Flight.route_id == Route.id)
-                .join(Airport, Airport.id == Route.departure_id)
-                .join(TicketPrice, Flight.id == TicketPrice.flight_id)
-                .join(TicketClass, TicketPrice.ticket_class_id == TicketClass.id)
-                .join(subquery, subquery.c.id == Flight.id)
-                .filter(Route.departure_id == de_id[0],
-                        Route.arrival_id == ar_id[0],
-                        func.date_format(Flight.departure_time, '%Y-%m-%d') == departure)
-                .all()
-            )
-
-            flight_ids = [row.id for row in result]
-            stop_details = get_stop_details(flight_ids)
-
-            flight_details = []
-
-            for row in result:
-                flight_id = row.id
-                stop_airport_names = row.stop_airport_names.split(',')
-                stop_orders = [int(order) for order in row.stop_orders.split(',')]
-
-                stop_details_for_flight = [
-                    stop_detail for stop_detail in stop_details if stop_detail.id == flight_id
-                ]
-
-                stop_details_dict = {}
-                for stop_detail in stop_details_for_flight:
-                    stop_details_dict[stop_detail.stop_order] = {
-                        'stop_airport_name': stop_detail.stop_airport_name,
-                        'stop_arrival_time': stop_detail.stop_arrival_time,
-                        'stop_delay_min': stop_detail.stop_delay_min
-                    }
-
-                flight_details.append({
-                    'Flight': {
-                        'ID': row.id,
-                        'Route Name': row.route_name,
-                        'Ticket Price': row.ticket_price,
-                        'Number of Airports': row.num_stops
-                    },
-                    'Details': {
-                        'Điểm đi':
-                            db.session.query(Airport.name).filter(Airport.id == row.departure_airport_id).first()[
-                                0],
-                        'Điểm đến': db.session.query(Airport.name).filter(Airport.id == row.arrival_airport_id).first()[
-                            0],
-                        'Ngày khởi hành': row.departure_time,
-                        'Ngày đến': row.arrival_time,
-                        'Hạng vé': row.ticket_class_name,
-                        'Tên sân bay trung gian': stop_airport_names,
-                        'Thứ tự sân bay trung gian': stop_orders,
-                        'Details for Stops': stop_details_dict
-                    }
-                })
-
-            return result
-
-        flight_details = get_flight_details("TP.HCM", "Hà Nội", "2023-12-31")
+        # def get_flight_details(start_location, end_location, departure):
+        #     de_id = get_airport_id(start_location)
+        #     ar_id = get_airport_id(end_location)
+        #
+        #     airport_alias = aliased(Airport)
+        #
+        #     subquery = (
+        #         db.session.query(
+        #             Stop.flight_id.label('id'),
+        #             func.group_concat(airport_alias.name).label('stop_airport_names'),
+        #             func.group_concat(Stop.order).label('stop_orders')
+        #         )
+        #         .join(airport_alias, airport_alias.id == Stop.airport_id)
+        #         .group_by(Stop.flight_id)
+        #         .subquery()
+        #     )
+        #
+        #     result = (
+        #         db.session.query(
+        #             Flight.id.label('id'),
+        #             Route.name.label('route_name'),
+        #             TicketPrice.price.label('ticket_price'),
+        #             Route.departure_id.label('departure_airport_id'),
+        #             Route.arrival_id.label('arrival_airport_id'),
+        #             Route.distance.label('distance'),
+        #             Flight.departure_time.label('departure_time'),
+        #             Flight.arrival_time.label('arrival_time'),
+        #             TicketClass.name.label('ticket_class_name'),
+        #             TicketClass.id.label('class_id'),
+        #             Flight.number_of_airport.label('num_stops'),
+        #             subquery.c.stop_airport_names.label('stop_airport_names'),
+        #             subquery.c.stop_orders.label('stop_orders'),
+        #             subquery.c.stop_orders.label('stop_arrival_time')
+        #         )
+        #         .join(Flight, Flight.route_id == Route.id)
+        #         .join(Airport, Airport.id == Route.departure_id)
+        #         .join(TicketPrice, Flight.id == TicketPrice.flight_id)
+        #         .join(TicketClass, TicketPrice.ticket_class_id == TicketClass.id)
+        #         .join(subquery, subquery.c.id == Flight.id)
+        #         .filter(Route.departure_id == de_id[0],
+        #                 Route.arrival_id == ar_id[0],
+        #                 func.date_format(Flight.departure_time, '%Y-%m-%d') == departure)
+        #         .all()
+        #     )
+        #
+        #     flight_ids = [row.id for row in result]
+        #     stop_details = get_stop_details(flight_ids)
+        #
+        #     flight_details = []
+        #
+        #     for row in result:
+        #         flight_id = row.id
+        #         stop_airport_names = row.stop_airport_names.split(',')
+        #         stop_orders = [int(order) for order in row.stop_orders.split(',')]
+        #
+        #         stop_details_for_flight = [
+        #             stop_detail for stop_detail in stop_details if stop_detail.id == flight_id
+        #         ]
+        #
+        #         stop_details_dict = {}
+        #         for stop_detail in stop_details_for_flight:
+        #             stop_details_dict[stop_detail.stop_order] = {
+        #                 'stop_airport_name': stop_detail.stop_airport_name,
+        #                 'stop_arrival_time': stop_detail.stop_arrival_time,
+        #                 'stop_delay_min': stop_detail.stop_delay_min
+        #             }
+        #
+        #         flight_details.append({
+        #             'Flight': {
+        #                 'ID': row.id,
+        #                 'Route Name': row.route_name,
+        #                 'Ticket Price': row.ticket_price,
+        #                 'Number of Airports': row.num_stops
+        #             },
+        #             'Details': {
+        #                 'Điểm đi':
+        #                     db.session.query(Airport.name).filter(Airport.id == row.departure_airport_id).first()[
+        #                         0],
+        #                 'Điểm đến': db.session.query(Airport.name).filter(Airport.id == row.arrival_airport_id).first()[
+        #                     0],
+        #                 'Ngày khởi hành': row.departure_time,
+        #                 'Ngày đến': row.arrival_time,
+        #                 'Hạng vé': row.ticket_class_name,
+        #                 'Tên sân bay trung gian': stop_airport_names,
+        #                 'Thứ tự sân bay trung gian': stop_orders,
+        #                 'Details for Stops': stop_details_dict
+        #             }
+        #         })
+        #
+        #     return result
+        #
+        # flight_details = get_flight_details("TP.HCM", "Hà Nội", "2023-12-31")
 
 
 
@@ -386,7 +429,7 @@ if __name__ == '__main__':
         #
         # flight_details = get_flight_details("TP.HCM", "Hà Nội", "2023-12-31")
         # print_flight_details(flight_details)
-
+        #
         # import hashlib
         #
         # u1 = Employee(name='Admin', username='admin',

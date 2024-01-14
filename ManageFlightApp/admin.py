@@ -20,6 +20,7 @@ class FlightView(AuthenticatedView):
 
 class CustomerView(AuthenticatedView):
     column_filters = ["username"]
+    column_list = ['customer']
 
 
 class SeatView(AuthenticatedView):
@@ -29,18 +30,22 @@ class SeatView(AuthenticatedView):
 
 class TicketClassView(AuthenticatedView):
     column_filters = ["name"]
+    column_list = ["id", "ticket_class"]
 
 
 class TicketView(AuthenticatedView):
     column_filters = ["id"]
+    column_list = ["ticket_class"]
 
 
 class PlaneView(AuthenticatedView):
     column_filters = ["name"]
+    column_list = ["seat"]
 
 
 class ReceiptView(AuthenticatedView):
     column_searchable_list = ["created_date", "id"]
+    column_list = ["customer"]
 
 
 class ReceiptDetailView(AuthenticatedView):
@@ -82,7 +87,6 @@ class EmployeeView(AuthenticatedView):
 class MyAdminIndexView(AdminIndexView):
     @expose("/")
     def index(self):
-        return self.render('admin/Manage.html', FlightStates=utils.flight_states())
         month = request.args.get("month", datetime.now())
         return self.render('admin/Manage.html', general_states=utils.General_States(m=month))
 
@@ -121,7 +125,6 @@ class PercentView(BaseView):
 
 
 admin = Admin(app=app, name="QUẢN TRỊ ADMIN", template_mode="bootstrap4", index_view=MyAdminIndexView())
-
 admin.add_view(CustomerView(Customer, db.session, category="Person"))
 admin.add_view(EmployeeView(Employee, db.session, category="Person"))
 admin.add_view(SeatView(Seat, db.session, category="Manage Ticket"))
