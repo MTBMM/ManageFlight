@@ -1,7 +1,7 @@
 {% extends "home/layout/base.html" %}
 
 {% block title %}
-<title>TRAVEL WITH MYCHU | Trang chủ</title>
+<title>TRAVEL WITH SUGAR GLIDER | Trang chủ</title>
 {% endblock %}
 
 {% block heading %}
@@ -21,7 +21,7 @@ Trang chủ
                                 <li class="nav-item">
                                     <a class="nav-link logo-label disabled" href="/"
                                        style="color: white; padding: 15px;">TRAVEL WITH
-                                        MYCHU</a>
+                                        SUGAR GLIDER</a>
                                 </li>
                                 {% if current_user.is_authenticated %}
                                 <li class="nav-item seat">
@@ -61,6 +61,7 @@ Trang chủ
                         </div>
                     </div>
                 </div>
+                    <div class="col-md-7">
                 <section id="first-tab-group" class="tabgroup">
                     <div id="tab1">
                         <div class="submit-form">
@@ -110,6 +111,7 @@ Trang chủ
                         </div>
                     </div>
                 </section>
+                </div>
             </div>
         </div>
     </section>
@@ -263,9 +265,20 @@ Trang chủ
                                  class="rounded-circle mx-auto">
                         </div>
                         <blockquote>
-                            <p>&ldquo;1951052131&rdquo;</p>
+                            <p>&ldquo;2151053044&rdquo;</p>
                         </blockquote>
-                        <p><em>&mdash; Nguyễn Hoàng Như Ngọc </em></p>
+                        <p><em>&mdash; Hồ Ngọc Nhung </em></p>
+                    </div>
+
+                    <div class="text-center slider-item">
+                        <div class="author-image col-sm-6">
+                            <img src="{{ url_for('static', filename='image/ngoc.png') }}" alt="Image placeholder"
+                                 class="rounded-circle mx-auto">
+                        </div>
+                        <blockquote>
+                            <p>&ldquo;2151053031&rdquo;</p>
+                        </blockquote>
+                        <p><em>&mdash; Nguyễn Trung Kiên </em></p>
                     </div>
 
                 </div>

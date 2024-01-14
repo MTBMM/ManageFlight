@@ -1,7 +1,7 @@
 from flask import render_template,\
     request, session, jsonify, url_for, redirect
 from ManageFlightApp import UtilsEmployee, utils, app, keys
-from twilio.rest import Client
+# from twilio.rest import Client
 
 
 def index_employee():

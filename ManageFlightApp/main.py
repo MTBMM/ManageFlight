@@ -1,4 +1,5 @@
-from flask import render_template
+from flask import render_template, session
+from flask_session import Session
 from ManageFlightApp import app, controllers, utils, login, employee
 
 app.add_url_rule("/", 'index', controllers.index, methods=['get', 'post'])
@@ -47,6 +48,11 @@ def page_not_found(error):
 @app.route("/account")
 def account():
     return render_template('user/account.html')
+
+
+app.config['SECRET_KEY'] = '123'
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 
 @app.route("/info")

@@ -4,9 +4,11 @@
 <title>TRAVEL WITH MYCHU | Trang chủ</title>
 {% endblock %}
 
+
 {% block heading %}
 Trang chủ
 {% endblock %}
+
 
 {% block content %}
 <body style="background-color: #7BCAFC;">
@@ -44,7 +46,7 @@ Trang chủ
                         <strong>65-11B787</strong>
                     </div>
                     <div class="col div-info">
-                        <div class="info"><img src="./static/image/vnlogo.png" class="img"></div>
+
                     </div>
                 </div>
                 <div class="row">
@@ -70,72 +72,116 @@ Trang chủ
             </div>
         </div>
         <div class="container p-5 my-5 rad-bor col">
-            <h4 id="title-info-person">Profile person <strong>1</strong></h4>
-            <form>
-                <div class="row">
-                    <div>
-                        <fieldset>
-                            <label for="firstname">First Name</label>
-                            <input type="text" class="form-control" id="firstname" placeholder="Enter your firstname"
-                                   name="firstname">
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset>
-                            <label for="last-name">Last Name and Middle Name</label>
-                            <input type="text" class="form-control" id="last-name"
-                                   placeholder="Enter your last name and middle name" name="last-name">
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset>
-                            <label for="dob">Date of birth</label>
-                            <input type="date" class="form-control" id="dob" placeholder="Enter your date of birth"
-                                   name="dob">
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset>
-                            <label for="gender">Gender</label>
-                            <select class="form-select" id="gender">
-                                <option value="female">Female</option>
-                                <option value="male">Male</option>
-                            </select>
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset>
-                            <label>CCCD/CMND</label>
-                            <input name="email" type="text" class="form-control"
-                                   placeholder="Enter your id">
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset>
-                            <label>Phone Number</label>
-                            <input name="password" type="password" class="form-control"
-                                   placeholder="Enter your phone number">
-                        </fieldset>
-                    </div>
-                </div>
-            </form>
+            <h4 id="title-info-person"><strong>Profile</strong></h4>
+            <form id="customerInfoForm">
+    <div class="row">
+        <div>
+            <fieldset>
+                <label for="firstname">First Name</label>
+                <input type="text" class="form-control" id="firstname" placeholder="Enter your firstname"
+                    name="firstname">
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <label for="last-name">Last Name and Middle Name</label>
+                <input type="text" class="form-control" id="last-name"
+                    placeholder="Enter your last name and middle name" name="last-name">
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <label for="dob">Date of birth</label>
+                <input type="date" class="form-control" id="dob" placeholder="Enter your date of birth" name="dob">
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <label for="gender">Gender</label>
+                <select class="form-select" id="gender">
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                </select>
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <label>CCCD/CMND</label>
+                <input name="id" type="text" class="form-control" placeholder="Enter your id">
+            </fieldset>
+        </div>
+        <div>
+            <fieldset>
+                <label>Phone Number</label>
+                <input name="phone" type="text" class="form-control" placeholder="Enter your phone number">
+            </fieldset>
+        </div>
+    </div>
+</form>
         </div>
 
         <div class="row">
             <div class="col">
                 <fieldset>
-                    <button type="submit" class="btn" style="background-color: #0579C3">BACK TO FLIGHTS
-                    </button>
+                    <button type="button" onclick="retrieveAndDisplayInfo()">Hiển thị thông tin</button>
                 </fieldset>
             </div>
-            <div class="col">
-                <fieldset>
-                    <button type="submit" class="btn" style="background-color: #1FA0F9">PICK POSITION
-                    </button>
-                </fieldset>
-            </div>
+           <div class="col">
+    <fieldset>
+        <button id="pickPositionBtn" type="button" class="btn" style="background-color: #1FA0F9" onclick="pickPosition()">
+            Next
+        </button>
+    </fieldset>
+</div>
         </div>
     </div>
 </div>
 </body>
+<script>
+function pickPosition(){
+    var customerInfo = {
+        firstname: document.getElementById('firstname').value,
+        lastName: document.getElementById('last-name').value,
+        dob: document.getElementById('dob').value,
+        gender: document.getElementById('gender').value,
+        id: document.getElementsByName('id')[0].value,
+        phone: document.getElementsByName('phone')[0].value
+    };
+
+    sessionStorage.setItem('customerInfo', JSON.stringify(customerInfo));
+
+    console.log('Thông tin khách hàng: ', customerInfo);
+}
+
+function retrieveAndDisplayInfo() {
+    // Lấy thông tin khách hàng từ Session Storage
+    var storedCustomerInfo = sessionStorage.getItem('customerInfo');
+
+    if (storedCustomerInfo) {
+        // Chuyển đổi chuỗi JSON thành đối tượng JavaScript
+        var customerInfo = JSON.parse(storedCustomerInfo);
+
+        // Hiển thị thông tin lấy được
+        console.log('Thông tin khách hàng:', customerInfo);
+
+        // Thực hiện bất kỳ xử lý nào khác dựa trên thông tin khách hàng
+        // Ví dụ: Hiển thị thông tin trên trang web
+        displayCustomerInfo(customerInfo);
+    } else {
+        console.log('Không có thông tin khách hàng trong Session Storage.');
+    }
+}
+
+function displayCustomerInfo(customerInfo) {
+    // Ví dụ: Hiển thị thông tin trên trang web
+    alert('Thông tin khách hàng:\n' +
+        'First Name: ' + customerInfo.firstname + '\n' +
+        'Last Name: ' + customerInfo.lastName + '\n' +
+        'Date of Birth: ' + customerInfo.dob + '\n' +
+        'Gender: ' + customerInfo.gender + '\n' +
+        'CCCD/CMND: ' + customerInfo.id + '\n' +
+        'Phone Number: ' + customerInfo.phone);
+}
+
+</script>
 {% endblock %}

@@ -1,23 +1,11 @@
-document.addEventListener('DOMContentLoaded', function () {
-   var btnToggleDetailsList = document.querySelectorAll('.btnToggleDetails');
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('toggle-details')) {
+        var flightId = event.target.getAttribute('data-flight-id');
+        var classId = event.target.getAttribute('data-class-id');
 
-   btnToggleDetailsList.forEach(function (btnToggleDetails) {
-      btnToggleDetails.addEventListener('click', function () {
-         var flightId = btnToggleDetails.getAttribute('data-flight-id');
-         var ticketClass = btnToggleDetails.getAttribute('class-id');
-         var collapseDetails = document.getElementById('collapseDetails' + flightId);
+        // Sử dụng flightId và classId để xác định chi tiết của vé
+        console.log('Đã nhấn Xem chi tiết cho chuyến bay ID:', flightId, '- Class ID:', classId);
 
-         // Kiểm tra trạng thái hiện tại và thay đổi
-         if (collapseDetails.classList.contains('show')) {
-            // Nếu đang hiển thị, ẩn đi
-            collapseDetails.classList.remove('show');
-         } else {
-            // Nếu đang ẩn, hiển thị lên
-            collapseDetails.classList.add('show');
-
-            // Tại đây, bạn có thể thực hiện bất kỳ xử lý nào khác cho nội dung chi tiết
-            // Dựa vào giá trị của ticketClass để xác định hạng vé
-         }
-      });
-   });
+        // Thêm logic của bạn để hiển thị/ẩn chi tiết hoặc thực hiện bất kỳ hành động nào khác dựa trên dữ liệu
+    }
 });

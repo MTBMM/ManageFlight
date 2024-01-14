@@ -1,7 +1,8 @@
 import cloudinary
-from flask import render_template, url_for, request, redirect
+from flask import render_template, url_for, request, redirect, session, Flask
 from cloudinary import uploader
 from flask_login import login_user, logout_user, login_required
+from sqlalchemy import JSON
 from ManageFlightApp.models import UserRoleEnum
 from ManageFlightApp import app, utils, UtilsEmployee
 
@@ -27,9 +28,12 @@ def list_flight_booking():
     return render_template('user/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to, stops=stops)
 
+<<<<<<< HEAD
     return render_template('home/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to)
 
+=======
+>>>>>>> c6b4d911356eba32e32ba6efcc2440cf999658f0
 
 def load_pos():
     flight_id = request.args.get('flight_id')
@@ -64,7 +68,8 @@ def register():
 
 
 def ticket():
-    return render_template("ticket.html")
+    customer_info = session.get('customer_info', {})
+    return render_template("user/ticket.html", customer_info=customer_info)
 
 
 def login():

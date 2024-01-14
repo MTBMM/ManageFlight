@@ -117,13 +117,16 @@
                 <!-- Example Code -->
 
     <p class="d-inline-flex gap-1">
-      <a id="btnToggleDetails{{ f.id }}" data-flight-id="{{ f.id }}"
-         data-ticket-class="{{ f.class_id }}" class="btn btn-primary collapsed"
-         data-bs-toggle="collapse" href="#collapseExample{{ f.id }}"
-         role="button" aria-expanded="false"
-         aria-controls="collapseExample{{ f.id }}">
-              Xem chi tiết
-        </a>
+    <a id="btnToggleDetails{{ f.id }}_{{ f.class_id }}"
+       data-flight-id="{{ f.id }}"
+       data-class-id="{{ f.class_id }}"
+       class="btn btn-primary collapsed toggle-details"
+       data-bs-toggle="collapse" href="#collapseExample{{ f.id }}_{{ f.class_id }}"
+       role="button" aria-expanded="false"
+       aria-controls="collapseExample{{ f.id }}_{{ f.class_id }}">
+      Xem chi tiết
+    </a>
+</a>
     </p>
 
     <!-- End Example Code -->
@@ -161,7 +164,7 @@
         <!-- Example Code -->
 
     <div class="col-md-3" style="padding = 0px; margin-right = 0px;">
-    <div class="collapse" id="collapseExample{{ f.id }}" style="">
+    <div  class="collapse" id="collapseExample{{ f.id }}_{{ f.class_id }}" style="">
       <div class="card card-body">
         <section>
           <div class="times">
@@ -202,11 +205,15 @@
           {% for s in stops %}
             {% if s.flight_id == f.id %}
             <div>
-              <small>Thời điểm đến: {{ s.airport.name }}</small>
+              <small></small>
+                <strong> Sân bay {{ s.airport.name }}</strong>
+            </div>
+           <div>
+              <small>Thời điểm đến: {{ s.arrival_time }}</small>
                 <strong> </strong>
             </div>
             <div>
-              <small>Thời gian dừng: {{ s.time_delay_min }} </small>
+              <small>Thời gian dừng: {{ s.time_delay_min }} phút </small>
                 <strong>  </strong>
             </div>
             <div>
