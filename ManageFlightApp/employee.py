@@ -1,7 +1,7 @@
 from flask import render_template,\
     request, session, jsonify, url_for
 from ManageFlightApp import UtilsEmployee, utils, app, keys
-from twilio.rest import Client
+# from twilio.rest import Client
 
 
 def index_employee():
@@ -140,11 +140,11 @@ def payment():
 
      try:
             UtilsEmployee.save_ticket(session.get("info"))
-            client = Client(keys.account_sid, keys.auth_token)
-            client.messages.create(
-                body="this is a sample message",
-                from_=keys.twilio_number,
-                 to=keys.my_number)
+            # client = Client(keys.account_sid, keys.auth_token)
+            # client.messages.create(
+            #     body="this is a sample message",
+            #     from_=keys.twilio_number,
+            #      to=keys.my_number)
 
             del session["info"]
 
