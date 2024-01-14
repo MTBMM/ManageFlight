@@ -1,5 +1,7 @@
-from flask import render_template, request
-from ManageFlightApp import UtilsEmployee, utils, app
+from flask import render_template,\
+    request, session, jsonify, url_for
+from ManageFlightApp import UtilsEmployee, utils, app, keys
+from twilio.rest import Client
 
 
 def index_employee():
@@ -48,7 +50,9 @@ def employee_buy_ticket():
 
 
 def list_buy_ticket():
-    return render_template("employee/ListBookTicket.html")
+    list_book_ticket = UtilsEmployee.customer_booked_ticket()
+
+    return render_template("employee/ListBookTicket.html", list_book_ticket=list_book_ticket)
 
 
 def load_detail_flight():
@@ -71,8 +75,81 @@ def common_reponse():
 
 def flight_detail():
     flight_id = request.args.get("flight_id")
-
+    list_flight = UtilsEmployee.get_detail_flight(flight_id=flight_id)
     # # if flight_id:
     flight_detail = UtilsEmployee.get_detail_flight(flight_id=int(flight_id))
     return render_template("employee/flight-detail.html", flight_detail=flight_detail,
                            stops=UtilsEmployee.get_stops())
+
+
+def user_information():
+    flight_id = request.args.get("f")
+    list_flight = UtilsEmployee.get_detail_flight(flight_id=int(flight_id))
+    list_airport = UtilsEmployee.get_airport()
+    for airport in list_airport:
+        if airport.id == list_flight.Route.departure_id:
+            departure = airport.name
+        if airport.id == list_flight.Route.arrival_id:
+            arrival = airport.name
+
+
+
+    info = {
+        "flight_id": list_flight.Flight.id,
+        "departure": departure,
+        "arrival": arrival,
+        "price": list_flight.TicketPrice.price,
+        "departure_time": list_flight.Flight.departure_time,
+        "arrival_time": list_flight.Flight.arrival_time,
+        "class": list_flight.TicketPrice.ticket_class.name,
+        "id_class": list_flight.TicketPrice.ticket_class.id
+    }
+    session["info"] = info
+
+    return render_template("employee/UserInformation.html")
+
+
+def enter_info():
+
+    if request.method == "POST":
+        name = request.form["fullname"]
+        birthdate = request.form["birthdate"]
+        phone = request.form["phone"]
+        identify = request.form["identify"]
+        info_user = {
+            "name": name,
+            "birthdate": birthdate,
+            "phone": phone,
+            "identify": identify,
+            "departure": session["info"]["departure"],
+            "arrival": session["info"]["arrival"],
+            "price": session["info"]["price"],
+            "departure_time": session["info"]["departure_time"],
+            "arrival_time": session["info"]["arrival_time"],
+            "class": session["info"]["class"],
+            "flight_id": session["info"]["flight_id"],
+            "id_class": session["info"]["id_class"]
+        }
+        session["info"] = info_user
+
+    return render_template("employee/payment.html")
+
+
+def payment():
+
+
+     try:
+            UtilsEmployee.save_ticket(session.get("info"))
+            client = Client(keys.account_sid, keys.auth_token)
+            client.messages.create(
+                body="this is a sample message",
+                from_=keys.twilio_number,
+                 to=keys.my_number)
+
+            del session["info"]
+
+            return jsonify({"code": 200})
+
+     except Exception as ex:
+             return jsonify({"code": 400})
+

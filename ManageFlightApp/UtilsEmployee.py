@@ -1,5 +1,5 @@
 from ManageFlightApp.models import *
-
+import hashlib
 
 def get_list_flight():
 
@@ -11,6 +11,7 @@ def get_list_flight():
         departure_airport_alias,
         arrival_airport_alias,
         TicketPrice
+
     ).join(Route, Flight.route_id == Route.id).join(
         departure_airport_alias, Route.departure_id == departure_airport_alias.id
     ).join(
@@ -18,8 +19,10 @@ def get_list_flight():
     ).join(TicketPrice, TicketPrice.flight_id == Flight.id).all()
     return list_flight
 
+
 def get_list_ticket():
         pass
+
 
 def get_class():
     return db.session.query(TicketClass)
@@ -33,12 +36,13 @@ def get_detail_flight(flight_id):
         Route,
         departure_airport_alias,
         arrival_airport_alias,
+        TicketPrice,
 
     ).join(Route, Flight.route_id == Route.id).join(
         departure_airport_alias, Route.departure_id == departure_airport_alias.id
     ).join(
         arrival_airport_alias, Route.arrival_id == arrival_airport_alias.id
-    ).filter(Flight.id.__eq__(flight_id)).first()
+    ).join(TicketPrice, TicketPrice.flight_id == Flight.id).filter(Flight.id.__eq__(flight_id)).first()
     return list_flight
 
 
@@ -71,5 +75,34 @@ def update_flight(departure, arrival, time_de, time_arr, rate1,  rate2, airport1
                   time_delay_max=time_delay_max, time_delay_min=time_delay_min)
     db.session.add(stop1)
     db.session.commit()
+
+
+def get_list_Route():
+    return db.session.query(Route).all()
+
+
+def get_airport():
+    return db.session.query(Airport).all()
+
+
+def customer_booked_ticket():
+    return db.session.query(Customer, Ticket).join(Customer, Customer.id == Ticket.customer_id).all()
+
+
+def save_ticket(info):
+
+    c = Customer(phone=info["phone"],
+                 Identify=info["identify"],
+                 name=info["name"], username="kien", password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()))
+
+    ticket = Ticket(seat_id=2, customer=c, flight_id=info["flight_id"], ticket_class_id=info["id_class"])
+    receipt = Receipt(employee_id=1,  unit_price=info["price"], customer=c)
+
+    detail = ReceiptDetail(ticket=ticket, receipt=receipt)
+    db.session.add(detail)
+    db.session.commit()
+
+
+
 
 

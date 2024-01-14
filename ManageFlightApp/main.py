@@ -21,6 +21,16 @@ app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
                  methods=['get'])
 
 
+app.add_url_rule("/UserInformation", 'user_information', employee.user_information,
+                 methods=['get'])
+
+
+app.add_url_rule("/api/pay", 'payment', employee.payment,
+                 methods=['post'])
+
+app.add_url_rule("/enter_info", "enter_info", employee.enter_info, methods=["get", "post"])
+
+
 # app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])
 
 @app.route("/user")

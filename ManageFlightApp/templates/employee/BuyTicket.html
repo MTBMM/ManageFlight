@@ -34,16 +34,22 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for fight, route, departure_airport_alias, arrival_airport_alias, ticket_price in flights %}
+                                    {% for flight, route, departure_airport_alias, arrival_airport_alias, ticket_price in flights %}
                                     <tr>
-                                        <th scope="row"></th>
                                         <td>{{ departure_airport_alias.name }}</td>
                                         <td>{{ arrival_airport_alias.name }}</td>
                                         <td>{{ flight.departure_time }}</td>
                                         <td>{{ flight.arrival_time }}</td>
-                                        <td>
-                                            <a href="" style="padding:10px; background-color: black; color:white; border-radius: 10%">
-                                                Đặc vế
+                                        <td class="btn btn-warning">
+                                            <a href="{{ url_for('user_information', f=flight.id) }}"
+                                               style="padding:10px; margin-top: 10px; color:blue; border-radius: 10%">
+                                                Đặt vế
+                                            </a>
+                                        </td>
+
+                                        <td class="btn btn-info" style="margin:20px 2px 20px 0">
+                                            <a href="" style="padding:10px; color:blue; border-radius: 10%">
+                                                Xem chi tiết
                                             </a>
                                         </td>
 
