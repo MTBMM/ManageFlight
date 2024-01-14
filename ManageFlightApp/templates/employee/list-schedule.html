@@ -102,7 +102,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for flight, route, de_airport, arr_airport, ticket_price in list_flight %}
+                                    {% for flight, route, de_airport, arr_airport in list_flight %}
                                     <tr>
                                         <th scope="row">{{ flight.id }}</th>
                                         <td>{{ de_airport.name }}</td>

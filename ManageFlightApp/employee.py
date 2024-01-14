@@ -1,5 +1,5 @@
 from flask import render_template,\
-    request, session, jsonify, url_for
+    request, session, jsonify, url_for, redirect
 from ManageFlightApp import UtilsEmployee, utils, app, keys
 from twilio.rest import Client
 
@@ -7,6 +7,37 @@ from twilio.rest import Client
 def index_employee():
 
     return render_template("employee/index.html")
+
+
+def submit_airplane():
+    messg = ""
+    if request.method == "POST":
+
+        airports = {}
+        for i in range(1, session["airplane"]["quantity_airport"] + 1):
+            id = str(i)
+            airport = request.form["airport" + str(i)]
+            time_delay_min = request.form["time_delay_min" + str(i)]
+            time_delay_max = request.form["time_delay_max" + str(i)]
+            arr_date = request.form["arr_date" + str(i)]
+            airports[id] = {
+                "airport": airport,
+                "time_delay_min": time_delay_min,
+                "time_delay_max": time_delay_max,
+                "arr_date":  arr_date
+            }
+
+        try:
+
+            UtilsEmployee.update_flight(airports=airports,  airplane=session["airplane"])
+            messg = "thành công"
+
+        except:
+            messg = "Không thành công"
+
+    return render_template("employee/info_airplane.html", messg=messg, quantity=session["airplane"]["quantity_airport"])
+
+
 
 
 def create_schedule():
@@ -18,29 +49,22 @@ def create_schedule():
         time_arr = request.form["date_arrival"]
         rate1 = request.form["rate1"]
         rate2 = request.form["rate2"]
-        airport1 = request.form["airport1"]
-        time_delay_min = request.form["time_delay_min"]
-        time_delay_max = request.form["time_delay_max"]
-        arr_date = request.form["arr_date"]
-
         quantity_airport = request.form["quantity_airport"]
+        session["airplane"] = {
+            "departure": departure,
+            "arrival": arrival,
+            "time_de": time_de,
+            "time_arr":  time_arr,
+            "rate1": int(rate1),
+            "rate2": int(rate2),
+            "quantity_airport":  int(quantity_airport)
+        }
         # import pdb
         # pdb.set_trace()
-        try:
-            UtilsEmployee.update_flight(departure=departure, arrival=arrival, time_de=time_de,
-                            time_arr=time_arr,
-                            rate1=rate1, rate2=rate2,
-                            airport1=airport1, time_delay_min=time_delay_min,
-                            time_delay_max=time_delay_max, arr_date=arr_date,
-                                       quantity_airport=quantity_airport
-                                       )
-            err_msg = "Success!!"
-
-        except:
-            err_msg = ""
+        return redirect(url_for('submit_airplane'))
 
     return render_template("employee/schedule.html",
-                           airport=utils.get_all_airport_names(), err_msg=err_msg)
+                           airport=utils.get_all_airport_names())
 
 
 def employee_buy_ticket():
@@ -140,11 +164,11 @@ def payment():
 
      try:
             UtilsEmployee.save_ticket(session.get("info"))
-            client = Client(keys.account_sid, keys.auth_token)
-            client.messages.create(
-                body="this is a sample message",
-                from_=keys.twilio_number,
-                 to=keys.my_number)
+            # client = Client(keys.account_sid, keys.auth_token)
+            # client.messages.create(
+            #     body="this is a sample message",
+            #     from_=keys.twilio_number,
+            #      to=keys.my_number)
 
             del session["info"]
 

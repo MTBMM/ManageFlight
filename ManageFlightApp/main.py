@@ -28,6 +28,7 @@ app.add_url_rule("/api/pay", 'payment', employee.payment,
                  methods=['post'])
 
 app.add_url_rule("/enter_info", "enter_info", employee.enter_info, methods=["get", "post"])
+app.add_url_rule("/submit_airplane", "submit_airplane", employee.submit_airplane, methods=["get", "post"])
 
 
 # app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])

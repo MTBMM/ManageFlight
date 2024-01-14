@@ -27,10 +27,14 @@ def list_flight_booking():
     return render_template('user/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to, stops=stops)
 
+    return render_template('home/list-flight.html', airport=airport, flights=flights,
+                           start=location_from, end=location_to)
 
 
 def load_pos():
-    # pos_type = dao.load_type_of_position()
+    flight_id = request.args.get('flight_id')
+    import pdb
+    pdb.set_trace()
     return render_template('user/position.html')
 
 

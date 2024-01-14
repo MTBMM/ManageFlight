@@ -62,6 +62,7 @@ class Flight(db.Model):
     flight_stop = relationship('Stop', backref='flight', lazy=True)
 
 
+
 class TicketClass(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
@@ -122,6 +123,8 @@ class Route(db.Model):
     arrival_id = Column(Integer, ForeignKey(Airport.id), nullable=False)  # diểm đến
     departure_id = Column(Integer, ForeignKey(Airport.id), nullable=False)  # điểm đi
     stops_route = relationship('Stop', backref='route', lazy=True)
+    route_flight = relationship('Flight', backref='route', lazy=True)
+
 
 
 class TicketPrice(db.Model):

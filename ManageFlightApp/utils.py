@@ -196,3 +196,8 @@ def get_flight_details(start_location, end_location, departure):
     return result
 
 
+def get_list_seat(flight_id):
+    return db.session.query(Flight, TicketPrice, TicketClass).join(Flight.id == TicketPrice.flight_id)\
+        .join()
+
+
