@@ -45,11 +45,11 @@ def percent_states():
 def General_States(m):
     total_revenue = db.session.query(func.sum(Receipt.unit_price)).scalar()
     k = 100 / total_revenue
-    return (db.session.query(Route.name, func.sum(Receipt.unit_price), func.count(Flight.route_id),
-                             func.sum(Receipt.unit_price) * k)
+    return (db.session.query(Route.name, func.sum(Receipt.unit_price), func.count(Route.id),
+                             func.sum(Receipt.unit_price) * k, Route.id)
             .join(Flight, Route.id == Flight.route_id)
-           .filter(extract('month', Receipt.created_date) == m)
-            .group_by(Route.name, extract('month', Receipt.created_date)).all())
+                      .filter(extract('month', Receipt.created_date) == m)
+            .group_by(Route.name, Route.id).all())
 
 
 def register(name, username, password, avatar):
@@ -194,5 +194,10 @@ def get_flight_details(start_location, end_location, departure):
         })
 
     return result
+
+
+def get_list_seat(flight_id):
+    return db.session.query(Flight, TicketPrice, TicketClass).join(Flight.id == TicketPrice.flight_id)\
+        .join()
 
 

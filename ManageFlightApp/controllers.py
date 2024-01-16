@@ -29,8 +29,10 @@ def list_flight_booking():
                            start=location_from, end=location_to, stops=stops)
 
 
+
 def load_pos():
-    # pos_type = dao.load_type_of_position()
+    flight_id = request.args.get('flight_id')
+
     return render_template('user/position.html')
 
 

@@ -1,22 +1,22 @@
 from ManageFlightApp.models import *
 import hashlib
 
-def get_list_flight():
 
+def get_list_flight():
     departure_airport_alias = aliased(Airport)
     arrival_airport_alias = aliased(Airport)
     list_flight = db.session.query(
         Flight,
         Route,
         departure_airport_alias,
-        arrival_airport_alias,
-        TicketPrice
+        arrival_airport_alias
+
 
     ).join(Route, Flight.route_id == Route.id).join(
         departure_airport_alias, Route.departure_id == departure_airport_alias.id
     ).join(
         arrival_airport_alias, Route.arrival_id == arrival_airport_alias.id
-    ).join(TicketPrice, TicketPrice.flight_id == Flight.id).all()
+    ).all()
     return list_flight
 
 
@@ -57,24 +57,29 @@ def get_airport_id(name):
 def get_route(de_name, ar_name):
     de_id = get_airport_id(name=de_name)
     ar_id = get_airport_id(name=ar_name)
+
     return db.session.query(Route.id).filter(Route.departure_id.__eq__(de_id[0]),
                                              Route.arrival_id.__eq__(ar_id[0])).first()
 
 
-def update_flight(departure, arrival, time_de, time_arr, rate1,  rate2, airport1, arr_date,
-                  time_delay_max, time_delay_min, quantity_airport):
+def update_flight(airports, airplane):
 
-    a2_id = get_airport_id(airport1)
-    route_id = get_route(de_name=departure, ar_name=arrival)
+    # route_id = get_route(de_name=airplane["departure"], ar_name=airplane["departure"])
+    name = airplane["departure"] + airplane["arrival"]
+    de_id = get_airport_id(name=airplane["departure"])
+    ar_id = get_airport_id(name=airplane["arrival"])
+    route = Route(departure_id=de_id[0], arrival_id=ar_id[0], name=name)
+    flight = Flight(route=route, departure_time=airplane["time_de"], arrival_time=airplane["time_arr"],
+                     quantity_class_1=airplane["rate1"], quantity_class_2=airplane["rate2"], number_of_airport=airplane["quantity_airport"])
 
-    flight1 = Flight(route_id=route_id[0], departure_time=time_de, arrival_time=time_arr,
-                     quantity_class_1=rate1, quantity_class_2=rate2, number_of_airport=quantity_airport)
-    # import pdb
-    # pdb.set_trace()
-    stop1 = Stop(route_id=route_id[0], airport_id=a2_id[0], arrival_time=arr_date, flight=flight1,
-                  time_delay_max=time_delay_max, time_delay_min=time_delay_min)
-    db.session.add(stop1)
-    db.session.commit()
+    for i in range(1, airplane["quantity_airport"] + 1):
+        id = str(i)
+        a2_id = get_airport_id(airports[id]["airport"])
+        stop = Stop(route=route, airport_id=a2_id[0], arrival_time=airports[id]["arr_date"], flight=flight,
+                      time_delay_max=airports[id]["time_delay_max"], time_delay_min=airports[id]["time_delay_min"])
+        db.session.add(stop)
+        db.session.commit()
+
 
 
 def get_list_Route():
@@ -101,6 +106,14 @@ def save_ticket(info):
     detail = ReceiptDetail(ticket=ticket, receipt=receipt)
     db.session.add(detail)
     db.session.commit()
+
+
+def delete_flight(flight_id):
+    list= db.session.query(Flight, Route, Stop).join(Flight, Flight.route_id == Route.id).\
+        join(Stop, Stop.route_id == Route.id)\
+        .filter(Flight.id.__eq__(flight_id)).first()
+    import pdb
+    pdb.set_trace()
 
 
 
