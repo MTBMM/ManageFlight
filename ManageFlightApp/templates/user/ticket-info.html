@@ -1,7 +1,7 @@
 {% extends "user/layout/base.html" %}
 
 {% block title %}
-<title>TRAVEL WITH MYCHU | Trang chủ</title>
+<title>TRAVEL WITH SUGAR GLIDER | Trang chủ</title>
 {% endblock %}
 
 
@@ -17,76 +17,19 @@ Trang chủ
         <div class="rad-bor row" style="padding: 0px; max-width: ">
             <div class="ticket-flight-info col" style="padding: 10px; border-radius: 20px">
                 <div class="row">
-                    <h4 style="text-align: center; color: #FFD733;">ECONOMY CLASS</h4>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <small>Tan Son Nhat</small>
-                    </div>
-                    <div class="col">
-                        <small style="float: right;">Ha Noi</small>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col" style="align-self: center;">
-                        <h2>TSN</h2>
-                    </div>
-                    <div class="col">
-                        <i class="fa fa-plane plane-icon" aria-hidden="true" style="font-size: xxx-large;"></i>
-                    </div>
-                    <div class="col" style="align-self: center;">
-                        <h2 style="float: right;">HN</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="row">
-                    <div class="col div-info">
-                        <small>FLIGHT</small>
-                        <strong>65-11B787</strong>
-                    </div>
-                    <div class="col div-info">
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col div-info">
-                        <small>Departure</small>
-                        <strong>11:35</strong>
-                    </div>
-                    <div class="col div-info">
-                        <small>Arrival</small>
-                        <strong>13:50</strong>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col div-info">
-                        <small>Boarding</small>
-                        <strong>11:05</strong>
-                    </div>
-                    <div class="col div-info">
-                        <small>Gate</small>
-                        <strong>11B</strong>
-                    </div>
+                    <h4 style="text-align: center; color: #FFD733;">PROFILE PERSON</h4>
                 </div>
             </div>
         </div>
         <div class="container p-5 my-5 rad-bor col">
-            <h4 id="title-info-person"><strong>Profile</strong></h4>
-            <form id="customerInfoForm">
+            <h4 id="title-info-person"><strong></strong></h4>
+            <form id="customerInfoForm" action="{{ url_for('enter_customer_info') }}" method="post">
     <div class="row">
         <div>
             <fieldset>
-                <label for="firstname">First Name</label>
-                <input type="text" class="form-control" id="firstname" placeholder="Enter your firstname"
-                    name="firstname">
-            </fieldset>
-        </div>
-        <div>
-            <fieldset>
-                <label for="last-name">Last Name and Middle Name</label>
-                <input type="text" class="form-control" id="last-name"
-                    placeholder="Enter your last name and middle name" name="last-name">
+                <label for="fullname">First Name</label>
+                <input type="text" class="form-control" id="fullname" placeholder="Enter your fullname"
+                    name="fullname">
             </fieldset>
         </div>
         <div>
@@ -123,65 +66,20 @@ Trang chủ
         <div class="row">
             <div class="col">
                 <fieldset>
-                    <button type="button" onclick="retrieveAndDisplayInfo()">Back</button>
+                    <button type="submit" class="btn" style="background-color: #0579C3">
+                        <a href="{{ url_for('load_pos' )}}"> BACK TO PICK POSITION</a>
+                    </button>
                 </fieldset>
             </div>
-           <div class="col">
-    <fieldset>
-        <button id="pickPositionBtn" type="button" class="btn" style="background-color: #1FA0F9" onclick="pickPosition()">
-            Next
-        </button>
-    </fieldset>
-</div>
+            <div class="col">
+                <fieldset>
+                    <button type="submit" class="btn" style="background-color: #1FA0F9">
+                        <a href="{{ url_for('confirm')}}"> PAYMENT </a>
+                    </button>
+                </fieldset>
+            </div>
         </div>
     </div>
 </div>
 </body>
-<script>
-function pickPosition(){
-    var customerInfo = {
-        firstname: document.getElementById('firstname').value,
-        lastName: document.getElementById('last-name').value,
-        dob: document.getElementById('dob').value,
-        gender: document.getElementById('gender').value,
-        id: document.getElementsByName('id')[0].value,
-        phone: document.getElementsByName('phone')[0].value
-    };
-
-    sessionStorage.setItem('customerInfo', JSON.stringify(customerInfo));
-
-    console.log('Thông tin khách hàng: ', customerInfo);
-}
-
-function retrieveAndDisplayInfo() {
-    // Lấy thông tin khách hàng từ Session Storage
-    var storedCustomerInfo = sessionStorage.getItem('customerInfo');
-
-    if (storedCustomerInfo) {
-        // Chuyển đổi chuỗi JSON thành đối tượng JavaScript
-        var customerInfo = JSON.parse(storedCustomerInfo);
-
-        // Hiển thị thông tin lấy được
-        console.log('Thông tin khách hàng:', customerInfo);
-
-        // Thực hiện bất kỳ xử lý nào khác dựa trên thông tin khách hàng
-        // Ví dụ: Hiển thị thông tin trên trang web
-        displayCustomerInfo(customerInfo);
-    } else {
-        console.log('Không có thông tin khách hàng trong Session Storage.');
-    }
-}
-
-function displayCustomerInfo(customerInfo) {
-    // Ví dụ: Hiển thị thông tin trên trang web
-    alert('Thông tin khách hàng:\n' +
-        'First Name: ' + customerInfo.firstname + '\n' +
-        'Last Name: ' + customerInfo.lastName + '\n' +
-        'Date of Birth: ' + customerInfo.dob + '\n' +
-        'Gender: ' + customerInfo.gender + '\n' +
-        'CCCD/CMND: ' + customerInfo.id + '\n' +
-        'Phone Number: ' + customerInfo.phone);
-}
-
-</script>
 {% endblock %}

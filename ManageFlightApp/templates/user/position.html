@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user/position.css') }}">
     <script src="{{ url_for('static', filename='js/user/position.js') }}"></script>
-    <script src="D:\ManageFlight\ManageFlightApp\static\js\home\listflight.js"></script>
 </head>
 <body style="background-color: #7BCAFC;">
 <header style="margin: -50px">
@@ -20,14 +19,14 @@
 </header>
 
 
-<!--{% if not current_user.is_authenticated %}-->
+{% if not current_user.is_authenticated %}
 
-<!--<div class="container-btn row">-->
-<!--    {% for p in pos_type %}-->
-<!--    <div class="btn btn-warning row" style="margin-top: 10px; border-radius: 20px" onclick="showAdd()"-->
-<!--    value="{{ p.id }}" id="type">{{ p.type_of_position_name }}</div>-->
-<!--    {% endfor %}-->
-<!--</div>-->
+<div class="container-btn row">
+    {% for p in pos_type %}
+    <div class="btn btn-warning row" style="margin-top: 10px; border-radius: 20px" onclick="showAdd()"
+    value="{{ p.id }}" id="type">{{ p.type_of_position_name }}</div>
+    {% endfor %}
+</div>
 
 <div style="padding:50px"></div>
 <div class="row" id="eco-seat">

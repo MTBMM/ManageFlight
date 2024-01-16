@@ -37,10 +37,6 @@ Trang chủ
                         <h4 class="col">HN</h4>
                     </div>
                     <div class="row">
-                        <label class="col">Boarding</label>
-                        <h4 class="col">11:05</h4>
-                    </div>
-                    <div class="row">
                         <label class="col">Departure</label>
                         <h4 class="col">11:35</h4>
                     </div>
@@ -51,30 +47,31 @@ Trang chủ
                 </div>
             </div>
             <div id="info-client" class="col">
-                <h6>THÔNG TIN HÀNH KHÁCH</h6>
-                <div class="container p-5 rad-bor h-full">
-                    <div class="row">
-                        <label class="col">Full Name</label>
-                        <h4 class="col">Nhung Ho Ngoc</h4>
-                    </div>
-                    <div class="row">
-                        <label class="col">CMND/CCCD</label>
-                        <h4 class="col">123456</h4>
-                    </div>
-                    <div class="row">
-                        <label class="col">Date of birth</label>
-                        <h4 class="col">29/01/2003</h4>
-                    </div>
-                    <div class="row">
-                        <label class="col">Gender</label>
-                        <h4 class="col">Female</h4>
-                    </div>
-                    <div class="row">
-                        <label class="col">Phone Number</label>
-                        <h4 class="col">0327174685</h4>
-                    </div>
-                </div>
-            </div>
+    <h6>THÔNG TIN HÀNH KHÁCH</h6>
+    <div class="container p-5 rad-bor h-full">
+        <div class="row">
+            <label class="col">Full Name</label>
+            <h4 class="col">{{ session['info']['name']  }}</h4>
+        </div>
+        <div class="row">
+            <label class="col">Identify</label>
+            <h4 class="col">{{session['info']['name'] }}</h4>
+        </div>
+        <div class="row">
+            <label class="col">Date of birth</label>
+            <h4 class="col">{{ session['info']['name']  }}</h4>
+        </div>
+        <div class="row">
+            <label class="col">Gender</label>
+            <h4 class="col">{{ session['info']['name']  }}</h4>
+        </div>
+        <div class="row">
+            <label class="col">Phone Number</label>
+            <h4 class="col">{{ session['info']['name']  }}</h4>
+        </div>
+    </div>
+</div>
+
             <div id="info-booking" class="col">
                 <h6>THÔNG TIN ĐẶT VÉ</h6>
                 <div class="container p-5 rad-bor h-full">

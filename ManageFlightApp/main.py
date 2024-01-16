@@ -1,6 +1,6 @@
 from flask import render_template, session
 from flask_session import Session
-from ManageFlightApp import app, controllers, utils, login, employee
+from ManageFlightApp import app, controllers, utils, login, employee, decorator
 
 app.add_url_rule("/", 'index', controllers.index, methods=['get', 'post'])
 app.add_url_rule("/register", 'register', controllers.register, methods=['get', 'post'])
@@ -20,10 +20,8 @@ app.add_url_rule('/load_detail_flight', 'load_detail_flight', employee.load_deta
 app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
                  methods=['get'])
 
-
 app.add_url_rule("/UserInformation", 'user_information', employee.user_information,
                  methods=['get'])
-
 
 app.add_url_rule("/api/pay", 'payment', employee.payment,
                  methods=['post'])
@@ -64,6 +62,21 @@ def info():
 def confirm():
     return render_template('user/confirm.html')
 
+
+@app.route("/enter_customer_info", methods=["get", "post"])
+def enter_customer_info():
+    name = request.form["fullname"]
+    birthdate = request.form["dob"]
+    phone = request.form["phone"]
+    identify = request.form["id"]
+    info_user = {
+        "name": name,
+        "birthdate": birthdate,
+        "phone": phone,
+        "identify": identify
+    }
+    session["info"] = info_user
+    return render_template('user/confirm.html')
 
 @login.user_loader
 def load_user(user_id):
