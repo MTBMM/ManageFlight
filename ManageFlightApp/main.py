@@ -17,8 +17,8 @@ app.add_url_rule('/employee_buy_ticket', 'employee_buy_ticket', employee.employe
 app.add_url_rule('/load_detail_flight', 'load_detail_flight', employee.load_detail_flight,
                  methods=['get'])
 app.add_url_rule('/confirm', 'enter_customer_info', controllers.enter_customer_info, methods=['get', 'post'])
-app.add_url_rule('/api/info', 'enter_flight_detail', controllers.enter_flight_detail, methods=['get', 'post'])
-
+app.add_url_rule('/info', 'enter_flight_detail', controllers.enter_flight_detail, methods=['get', 'post'])
+app.add_url_rule('/api/info', 'api_info', controllers.api_info, methods=['post'])
 app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
                  methods=['get'])
 
@@ -26,6 +26,8 @@ app.add_url_rule("/UserInformation", 'user_information', employee.user_informati
                  methods=['get'])
 
 app.add_url_rule("/api/pay", 'payment', employee.payment,
+                 methods=['post'])
+app.add_url_rule("/api/pay_cus", 'payment_cus', controllers.payment_cus,
                  methods=['post'])
 
 app.add_url_rule("/enter_info", "enter_info", employee.enter_info, methods=["get", "post"])

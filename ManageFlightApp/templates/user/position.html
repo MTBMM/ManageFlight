@@ -11,7 +11,7 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user/position.css') }}">
-    <script src="D:\ManageFlight\ManageFlightApp\static\js\user\position.js"></script>
+    <script src="ManageFlightApp\static\js\user\position.js"></script>
 </head>
 <body style="background-color: #7BCAFC;">
 <header style="margin: -50px">
@@ -21,7 +21,7 @@
 
 <div class="container-btn row">
     {% for p in pos_type %}
-    <div class="btn btn-warning row" style="margin-top: 10px; border-radius: 20px" onclick="showAdd()"
+    <div class="btn btn-warning row" style="margin-top: 10px; border-radius: 20px; " onclick="showAdd()"
     value="{{ p.id }}" id="type">{{ p.type_of_position_name }}</div>
     {% endfor %}
 </div>
@@ -74,10 +74,15 @@
                 <h3 style="text-align: center; margin: 0px; font-size: 15px">{{seat.number_seat}}</h3>
             </div>
             <div class="seat">
-                <button onclick="pos( {{ seat.id }}, '{{ seat.number_seat }}', {{ seat.status }} )"><i value="{{seat.name}}" id ="{{seat.id}}"
+            {% if seat.status == False %}
+                    <i value="{{seat.name}}"
                    class="fa fa-circle seat-icon seat-icon-empty seat-icon-check"
+                   aria-hidden="true" onclick="pos( {{ seat.id }}, '{{ seat.number_seat }}', '{{ seat.status }}' )" ></i>
+            {% else %}
+                    <i value="{{seat.name}}"
+                   class="fa fa-circle seat-icon seat-icon-disable seat-icon-check"
                    aria-hidden="true"  ></i>
-                </button>
+            {% endif %}
             </div>
         </div>
             {% endif %}
@@ -101,10 +106,15 @@
                 <h3 style="text-align: center; margin: 0px; font-size: 15px">{{seat.number_seat}}</h3>
             </div>
             <div class="seat">
-                <button onclick="pos( {{ seat.id }}, '{{ seat.number_seat }}', {{ seat.status }} )"><i value="{{seat.name}}" id ="{{seat.id}}"
+                {% if seat.status == False %}
+                    <i value="{{seat.name}}"
                    class="fa fa-circle seat-icon seat-icon-empty seat-icon-check"
+                   aria-hidden="true" onclick="pos( {{ seat.id }}, '{{ seat.number_seat }}', '{{ seat.status }}' )"></i>
+            {% else %}
+                    <i value="{{seat.name}}"
+                   class="fa fa-circle seat-icon seat-icon-disable seat-icon-check"
                    aria-hidden="true"  ></i>
-                </button>
+            {% endif %}
             </div>
         </div>
             {% endif %}
@@ -118,33 +128,15 @@
 <div class="row" style="padding-top: 20px" id="info-pick">
     <div class="seat-info" style="">
         <div class="row">
-            <div class="seat">
-                <i class="fa fa-ticket seat-icon seat-icon-select"
-                   aria-hidden="true"></i>
-            </div>
-            <div class="info">
-                <h6 style="text-align: center; margin: 0px">CHƯA CHỌN GHẾ</h6>
-            </div>
-        </div>
-        <div class="row">
-            <div class="seat">
-                <h6 style="text-align: center; margin: 0px">TOTAL: </h6>
-            </div>
-            <div class="info">
-                <h6 style="text-align: center; margin: 0px">0đ</h6>
-            </div>
-        </div>
-        <div class="row">
             <fieldset>
-                <button class="btn-continue" type="submit" class="btn"">
+                <button class="btn" type="submit" style="margin-left: 50px">
                     <a href="{{ url_for('enter_flight_detail' )}}">CONTINUE</a>
                 </button>
             </fieldset>
         </div>
     </div>
-    </div>
-</body>
-
+</div>
+</div>
 <script>
 let seatArr = [];
 let price = 0;
@@ -230,7 +222,9 @@ document.addEventListener('DOMContentLoaded', function () {
 };
 
 function pos(id, name, status) {
-    event.preventDefault();
+     event.preventDefault();
+    console.log("ham đc goi", id, name, status);
+
     fetch("/api/info", {
         method: "POST",
         body: JSON.stringify({
@@ -239,7 +233,7 @@ function pos(id, name, status) {
             "status": status
         }),
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'Application/json'
         }
     })
     .then(res => res.json())
@@ -248,4 +242,5 @@ function pos(id, name, status) {
     });
 }
 </script>
+</body>
 </html>

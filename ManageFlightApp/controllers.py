@@ -1,10 +1,27 @@
+from functools import wraps
+
 import cloudinary
+from functools import wraps
 from flask import render_template, url_for, request, redirect, session, Flask, jsonify
 from cloudinary import uploader
-from flask_login import login_user, logout_user, login_required
-from sqlalchemy import JSON
-from ManageFlightApp.models import UserRoleEnum, Seat
-from ManageFlightApp import app, utils, UtilsEmployee
+from flask_login import login_user, logout_user, current_user
+from ManageFlightApp.models import UserRoleEnum
+from ManageFlightApp import app, utils, UtilsEmployee, login
+
+
+def login_required(f):
+    @wraps(f)
+    def check(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for("login_user", next=request.url))
+        return f(*args, **kwargs)
+
+    return check
+
+
+@login.user_loader
+def user_loader(user_id):
+    return utils.get_user_by_id(user_id=user_id)
 
 
 def index():
@@ -29,6 +46,7 @@ def list_flight_booking():
                            start=location_from, end=location_to, stops=stops)
 
 
+@login_required
 def load_pos():
     flight_id = request.args.get('flight_id')
     class_id = request.args.get('class_id')
@@ -61,31 +79,15 @@ def load_pos():
     return render_template('user/position.html', seats=seats, seat_first=seat_first, class_id=class_id)
 
 
-@app.route('/api/add_pos', methods=['POST'])
 def api_info():
-    data = request.get_json()
+    data = request.json
     id_value = data.get('id')
     name_value = data.get('name')
     status_value = data.get('status')
-    import pdb
-    pdb.set_trace()
     response_data = {
-        'id': id_value,
+        'id_seat': id_value,
         'name': name_value,
-        'status': status_value
-    }
-
-    return jsonify(response_data)
-
-def enter_flight_detail():
-    data = request.get_json()
-    name = data.get('name')
-    seat_id = data.get('id')
-    status = data.get('status')
-    info_flight = {
-        'id': seat_id,
-        'name': name,
-        'status': status,
+        'status': status_value,
         "departure": session["info"]["departure"],
         "arrival": session["info"]["arrival"],
         "price": session["info"]["price"],
@@ -96,7 +98,28 @@ def enter_flight_detail():
         "id_class": session["info"]["id_class"],
         "plane": session["info"]["plane"]
     }
-    session['info'] = info_flight
+    session['info'] = response_data
+    # import pdb
+    # pdb.set_trace()
+    return jsonify(response_data)
+
+
+def enter_flight_detail():
+    response_data = {
+        'id_seat': session["info"]["id_seat"],
+        'name_seat': session["info"]["name"],
+        'status': session["info"]["status"],
+        "departure": session["info"]["departure"],
+        "arrival": session["info"]["arrival"],
+        "price": session["info"]["price"],
+        "departure_time": session["info"]["departure_time"],
+        "arrival_time": session["info"]["arrival_time"],
+        "class": session["info"]["class"],
+        "flight_id": session["info"]["flight_id"],
+        "id_class": session["info"]["id_class"],
+        "plane": session["info"]["plane"]
+    }
+    session['info'] = response_data
     return render_template('user/ticket-info.html')
 
 
@@ -107,7 +130,6 @@ def enter_customer_info():
         phone = request.form["phone"]
         identify = request.form["id"]
         gender = request.form["gender"]
-
         info_user = {
             "name": name,
             "birthdate": birthdate,
@@ -122,10 +144,14 @@ def enter_customer_info():
             "class": session["info"]["class"],
             "flight_id": session["info"]["flight_id"],
             "id_class": session["info"]["id_class"],
-            "plane": session["info"]["plane"]
+            "plane": session["info"]["plane"],
+            'id_seat': session["info"]["id_seat"],
+            'name_seat': session["info"]["name_seat"],
+            'status': session["info"]["status"]
         }
         session['info'] = info_user
-
+        # import pdb
+        # pdb.set_trace()
         return render_template('user/confirm.html')
 
 
@@ -191,6 +217,25 @@ def sign_admin():
             login_user(user=user)
 
     return redirect("/admin")
+
+
+def payment_cus():
+    try:
+        utils.save_ticket(session.get("info"))
+        import pdb
+        pdb.set_trace()
+        # client = Client(keys.account_sid, keys.auth_token)
+        # client.messages.create(
+        #     body="this is a sample message",
+        #     from_=keys.twilio_number,
+        #      to=keys.my_number)
+        #
+        # del session["info"]
+
+        return jsonify({"code": 200})
+
+    except Exception as ex:
+        return jsonify({"code": 400})
 
 
 if __name__ == '__main__':
