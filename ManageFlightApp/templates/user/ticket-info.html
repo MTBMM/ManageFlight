@@ -23,11 +23,11 @@ Trang chủ
         </div>
         <div class="container p-5 my-5 rad-bor col">
             <h4 id="title-info-person"><strong></strong></h4>
-            <form id="customerInfoForm" action="{{ url_for('enter_customer_info') }}" method="post">
+            <form id="customerInfoForm" action="{{ url_for('enter_customer_info')}}" method="post">
     <div class="row">
         <div>
             <fieldset>
-                <label for="fullname">First Name</label>
+                <label for="fullname">Full Name</label>
                 <input type="text" class="form-control" id="fullname" placeholder="Enter your fullname"
                     name="fullname">
             </fieldset>
@@ -41,7 +41,7 @@ Trang chủ
         <div>
             <fieldset>
                 <label for="gender">Gender</label>
-                <select class="form-select" id="gender">
+                <select class="form-select" id="gender" name="gender">
                     <option value="female">Female</option>
                     <option value="male">Male</option>
                 </select>
@@ -60,10 +60,7 @@ Trang chủ
             </fieldset>
         </div>
     </div>
-</form>
-        </div>
-
-        <div class="row">
+                <div class="row">
             <div class="col">
                 <fieldset>
                     <button type="submit" class="btn" style="background-color: #0579C3">
@@ -74,11 +71,14 @@ Trang chủ
             <div class="col">
                 <fieldset>
                     <button type="submit" class="btn" style="background-color: #1FA0F9">
-                        <a href="{{ url_for('confirm')}}"> PAYMENT </a>
+                        PAYMENT
                     </button>
                 </fieldset>
             </div>
         </div>
+</form>
+</div>
+
     </div>
 </div>
 </body>

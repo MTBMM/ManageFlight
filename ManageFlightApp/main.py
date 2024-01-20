@@ -16,6 +16,8 @@ app.add_url_rule('/list_buy_ticket', 'list_buy_ticket', employee.list_buy_ticket
 app.add_url_rule('/employee_buy_ticket', 'employee_buy_ticket', employee.employee_buy_ticket, methods=['get'])
 app.add_url_rule('/load_detail_flight', 'load_detail_flight', employee.load_detail_flight,
                  methods=['get'])
+app.add_url_rule('/confirm', 'enter_customer_info', controllers.enter_customer_info, methods=['get', 'post'])
+app.add_url_rule('/api/info', 'enter_flight_detail', controllers.enter_flight_detail, methods=['get', 'post'])
 
 app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
                  methods=['get'])
@@ -53,30 +55,12 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 
-@app.route("/info")
-def info():
-    return render_template('user/ticket-info.html')
+# @app.route("/info")
+# def info():
+#     return render_template('user/ticket-info.html')
 
 
-@app.route("/confirm")
-def confirm():
-    return render_template('user/confirm.html')
 
-
-@app.route("/enter_customer_info", methods=["get", "post"])
-def enter_customer_info():
-    name = request.form["fullname"]
-    birthdate = request.form["dob"]
-    phone = request.form["phone"]
-    identify = request.form["id"]
-    info_user = {
-        "name": name,
-        "birthdate": birthdate,
-        "phone": phone,
-        "identify": identify
-    }
-    session["info"] = info_user
-    return render_template('user/confirm.html')
 
 @login.user_loader
 def load_user(user_id):

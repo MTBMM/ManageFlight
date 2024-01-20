@@ -116,8 +116,6 @@ def user_information():
         if airport.id == list_flight.Route.arrival_id:
             arrival = airport.name
 
-
-
     info = {
         "flight_id": list_flight.Flight.id,
         "departure": departure,
