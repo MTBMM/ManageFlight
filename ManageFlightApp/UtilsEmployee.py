@@ -107,15 +107,3 @@ def save_ticket(info):
     db.session.add(detail)
     db.session.commit()
 
-
-def delete_flight(flight_id):
-    list= db.session.query(Flight, Route, Stop).join(Flight, Flight.route_id == Route.id).\
-        join(Stop, Stop.route_id == Route.id)\
-        .filter(Flight.id.__eq__(flight_id)).first()
-    import pdb
-    pdb.set_trace()
-
-
-
-
-

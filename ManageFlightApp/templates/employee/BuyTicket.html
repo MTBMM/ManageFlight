@@ -34,7 +34,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for flight, route, departure_airport_alias, arrival_airport_alias, ticket_price in flights %}
+                                    {% for flight, route, departure_airport_alias, arrival_airport_alias in flights %}
                                     <tr>
                                         <td>{{ departure_airport_alias.name }}</td>
                                         <td>{{ arrival_airport_alias.name }}</td>

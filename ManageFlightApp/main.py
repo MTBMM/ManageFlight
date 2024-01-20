@@ -1,5 +1,4 @@
 from flask import render_template, session
-from flask_session import Session
 from ManageFlightApp import app, controllers, utils, login, employee
 
 app.add_url_rule("/", 'index', controllers.index, methods=['get', 'post'])
@@ -25,12 +24,13 @@ app.add_url_rule("/UserInformation", 'user_information', employee.user_informati
                  methods=['get'])
 
 
-app.add_url_rule("/api/pay", 'payment', employee.payment,
-                 methods=['post'])
+app.add_url_rule("/payment", 'payment', employee.payment,
+                 methods=['get', 'post'])
 
 app.add_url_rule("/enter_info", "enter_info", employee.enter_info, methods=["get", "post"])
 app.add_url_rule("/submit_airplane", "submit_airplane", employee.submit_airplane, methods=["get", "post"])
-app.add_url_rule("/delete_flight/<int:flight_id>", "delete_flight", employee.delete_flight, methods=["get"])
+# app.add_url_rule("/delete_flight/<int:flight_id>", "delete_flight", employee.delete_flight, methods=["get"])
+app.add_url_rule("/export_ticket", "export_ticket", employee.export_ticket, methods=["get"])
 
 
 # app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])
@@ -49,10 +49,10 @@ def page_not_found(error):
 def account():
     return render_template('user/account.html')
 
-
-app.config['SECRET_KEY'] = '123'
-app.config['SESSION_TYPE'] = 'filesystem'
-Session(app)
+#
+# app.config['SECRET_KEY'] = '123'
+# app.config['SESSION_TYPE'] = 'filesystem'
+# Session(app)
 
 
 @app.route("/info")

@@ -28,12 +28,9 @@ def list_flight_booking():
     return render_template('user/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to, stops=stops)
 
-<<<<<<< HEAD
     return render_template('home/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to)
 
-=======
->>>>>>> c6b4d911356eba32e32ba6efcc2440cf999658f0
 
 def load_pos():
     flight_id = request.args.get('flight_id')

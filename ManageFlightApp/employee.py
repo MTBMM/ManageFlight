@@ -1,11 +1,11 @@
 from flask import render_template,\
-    request, session, jsonify, url_for, redirect
+    request, session, jsonify, url_for, redirect, send_file
 from ManageFlightApp import UtilsEmployee, utils, app, keys
 # from twilio.rest import Client
-
+from io import BytesIO
+from reportlab.pdfgen import canvas
 
 def index_employee():
-
     return render_template("employee/index.html")
 
 
@@ -88,12 +88,13 @@ def load_detail_flight():
                            airport=utils.get_all_airport_names(),
                            ticket_class=UtilsEmployee.get_class())
 
+messg = ""
 
 @app.context_processor
 def common_reponse():
     return {
-        'airport': utils.get_all_airport_names()
-
+        'airport': utils.get_all_airport_names(),
+        'messg': messg
     }
 
 
@@ -158,27 +159,73 @@ def enter_info():
 
     return render_template("employee/payment.html")
 
+user_data = []
 
 def payment():
 
-
-     try:
+    if request.method == "POST":
+        try:
             UtilsEmployee.save_ticket(session.get("info"))
-            # client = Client(keys.account_sid, keys.auth_token)
-            # client.messages.create(
-            #     body="this is a sample message",
-            #     from_=keys.twilio_number,
-            #      to=keys.my_number)
+                    # client = Client(keys.account_sid, keys.auth_token)
+                    # client.messages.create(
+                    #     body="this is a sample message",
+                    #     from_=keys.twilio_number,
+                    #      to=keys.my_number)
+            messg = "Success!!"
 
+            user_data.append({
+                        "departure": session["info"]["departure"],
+                        "arrival": session["info"]["arrival"],
+                        "price": session["info"]["price"],
+                        "departure_time": session["info"]["departure_time"],
+                        "arrival_time": session["info"]["arrival_time"],
+                        "class": session["info"]["class"],
+                        "flight_id": session["info"]["flight_id"],
+                        "id_class": session["info"]["id_class"]
+                    })
+
+
+                    # import pdb
+                    # pdb.set_trace()
             del session["info"]
 
-            return jsonify({"code": 200})
+            return render_template("employee/payment.html",  messg= messg)
 
-     except Exception as ex:
-             return jsonify({"code": 400})
+        except Exception as ex:
+            messg = "Not Success!!"
+            return render_template("employee/payment.html",  messg= messg)
+
+
+
+def export_ticket():
+    pdf_file = generate_pdf_file()
+    return send_file(pdf_file, as_attachment=True, download_name='Ticket.pdf')
+
+
+def generate_pdf_file():
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer)
+
+    # Create a PDF document
+    p.drawString(100, 750, "Ticket")
+
+    y = 700
+    for user in user_data:
+        p.drawString(100, y, f"departure: {user['departure']}")
+        p.drawString(100, y - 20, f"arrival: {user['arrival']}")
+        p.drawString(100, y - 40, f"price: {user['price']}")
+        y -= 60
+
+    p.showPage()
+    p.save()
+
+    buffer.seek(0)
+    return buffer
+
 
 
 def delete_flight(flight_id):
-    UtilsEmployee.delete_flight(flight_id=flight_id)
+    pass
+    # UtilsEmployee.delete_flight(flight_id=flight_id)
 
 
