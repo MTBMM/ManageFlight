@@ -18,8 +18,8 @@ app.add_url_rule('/employee_buy_ticket', 'employee_buy_ticket', employee.employe
 app.add_url_rule('/load_detail_flight', 'load_detail_flight', employee.load_detail_flight,
                  methods=['get'])
 app.add_url_rule('/confirm', 'enter_customer_info', controllers.enter_customer_info, methods=['get', 'post'])
-app.add_url_rule('/api/info', 'enter_flight_detail', controllers.enter_flight_detail, methods=['get', 'post'])
-
+app.add_url_rule('/info', 'enter_flight_detail', controllers.enter_flight_detail, methods=['get', 'post'])
+app.add_url_rule('/api/info', 'api_info', controllers.api_info, methods=['post'])
 app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
                  methods=['get'])
 
@@ -31,11 +31,16 @@ app.add_url_rule("/payment", 'payment', employee.payment,
                  methods=['get', 'post'])
 app.add_url_rule("/api/pay", 'payment', employee.payment,
                  methods=['post'])
+app.add_url_rule("/api/pay_cus", 'payment_cus', controllers.payment_cus,
+                 methods=['post'])
 
 app.add_url_rule("/enter_info", "enter_info", employee.enter_info, methods=["get", "post"])
 app.add_url_rule("/submit_airplane", "submit_airplane", employee.submit_airplane, methods=["get", "post"])
 # app.add_url_rule("/delete_flight/<int:flight_id>", "delete_flight", employee.delete_flight, methods=["get"])
 app.add_url_rule("/export_ticket", "export_ticket", employee.export_ticket, methods=["get"])
+app.add_url_rule("/pay_online", "pay_online", controllers.pay_online, methods=["get"])
+app.add_url_rule("/create-payment-intent", "create_payment_intent", controllers.create_payment_intent, methods=["POST"])
+app.add_url_rule("/config", "get_publishable_key", controllers.get_publishable_key, methods=["get"])
 
 
 # app.add_url_rule('/ticket', 'ticket', controllers.ticket, methods=['get'])

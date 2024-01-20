@@ -1,6 +1,8 @@
+from sqlalchemy.engine import cursor
+
 from ManageFlightApp.models import *
 import hashlib
-from sqlalchemy import func, extract
+from sqlalchemy import func, extract, update
 from datetime import datetime
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
@@ -27,6 +29,10 @@ def flight_states():
     return k
 
 
+def get_user_by_id(user_id):
+    return Customer.query.get(int(user_id))
+
+
 def revenue_states():
     return (db.session.query(Route.name, extract('month', Receipt.created_date), func.sum(Receipt.unit_price))
             .join(Flight, Route.id == Flight.route_id)
@@ -43,30 +49,11 @@ def percent_states():
 
 
 def General_States(m):
-    total_revenue = (
-            db.session.query(func.sum(Receipt.unit_price))
-            .join(ReceiptDetail, ReceiptDetail.receipt_id == Receipt.id)
-            .join(Ticket, Ticket.id == ReceiptDetail.ticket_id)
-            .join(Flight, Flight.id == Ticket.flight_id)
-            .filter(func.extract('month', Receipt.created_date) == m)
-            .scalar() or 1  # Tránh chia cho 0
-    )
-
-    return (
-        db.session.query(
-            Route.name,
-            func.sum(Receipt.unit_price).label('total_revenue'),
-            func.count(Flight.id).label('total_flights'),
-            (func.sum(Receipt.unit_price) / total_revenue * 100).label('revenue_percentage')
-        )
-        .join(Flight, Flight.route_id == Route.id)
-        .join(Ticket, Ticket.flight_id == Flight.id)
-        .join(ReceiptDetail, ReceiptDetail.ticket_id == Ticket.id)
-        .join(Receipt, Receipt.id == ReceiptDetail.receipt_id)
-        .filter(func.extract('month', Receipt.created_date) == m)
-        .group_by(Route.name)
-        .all()
-    )
+    return (db.session.query(Route.name, func.sum(Receipt.unit_price))
+            .join(Flight, Route.id == Flight.route_id)
+            .join(Receipt, Flight.id == Receipt.flight_id)
+            .group_by(Route.name, extract('month', Receipt.created_date))
+            .filter(extract('month', Receipt.created_date) == m).all())
 
 
 def register(name, username, password, avatar):
@@ -252,3 +239,18 @@ def get_seat_first(flight_id):
 def get_list_seat(flight_id):
     return db.session.query(Flight, TicketPrice, TicketClass).join(Flight.id == TicketPrice.flight_id) \
         .join()
+
+
+def save_ticket(info):
+    c = Customer(phone=info["phone"],
+                 Identify=info["identify"],
+                 name=info["name"], username="kien", password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()))
+
+    ticket = Ticket(seat_id=2, customer=c, flight_id=info["flight_id"], ticket_class_id=info["id_class"])
+    receipt = Receipt(employee_id=1,flight_id=info["flight_id"], unit_price=info["price"], customer=c)
+
+    detail = ReceiptDetail(ticket=ticket, receipt=receipt)
+    update_query = update(Seat).where(Seat.id == info["id_seat"]).values(status=1)
+    db.session.execute(update_query)
+    db.session.add(detail)
+    db.session.commit()

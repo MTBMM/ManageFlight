@@ -78,7 +78,7 @@ Trang chủ
                     </div>
                     <div class="row">
                         <label class="col">Seat Number</label>
-                        <h4 class="col">A1</h4>
+                        <h4 class="col">{{session['info']['name_seat'] }}</h4>
                     </div>
                     <div class="row">
                         <label class="col">Total</label>
@@ -98,8 +98,8 @@ Trang chủ
                         </div>
                         <div class="col">
                             <fieldset>
-                                <button type="submit" class="btn" style="background-color: #1FA0F9; color: white; width: 100px;" onclick="pay()">
-                                    <a href="{{ url_for('ticket' )}}"> PAY</a>
+                                <button type="submit" class="btn" style="background-color: #1FA0F9; color: white; width: 100px;" onclick="pay_cus()">
+                                    <a href="{{ url_for('pay_online')}}"> PAY</a>
                                 </button>
                             </fieldset>
                         </div>

@@ -1,10 +1,28 @@
+from functools import wraps
+
 import cloudinary
+from functools import wraps
 from flask import render_template, url_for, request, redirect, session, Flask, jsonify
 from cloudinary import uploader
-from flask_login import login_user, logout_user, login_required
-from sqlalchemy import JSON
-from ManageFlightApp.models import UserRoleEnum, Seat
-from ManageFlightApp import app, utils, UtilsEmployee
+from flask_login import login_user, logout_user, current_user
+from ManageFlightApp.models import UserRoleEnum
+from ManageFlightApp import app, utils, UtilsEmployee, login
+import stripe
+
+
+def login_required(f):
+    @wraps(f)
+    def check(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return redirect(url_for("login", next=request.url))
+        return f(*args, **kwargs)
+
+    return check
+
+
+@login.user_loader
+def user_loader(user_id):
+    return utils.get_user_by_id(user_id=user_id)
 
 
 def index():
@@ -28,6 +46,8 @@ def list_flight_booking():
     return render_template('user/list-flight.html', airport=airport, flights=flights,
                            start=location_from, end=location_to, stops=stops)
 
+
+@login_required
 def load_pos():
     flight_id = request.args.get('flight_id')
     class_id = request.args.get('class_id')
@@ -60,32 +80,15 @@ def load_pos():
     return render_template('user/position.html', seats=seats, seat_first=seat_first, class_id=class_id)
 
 
-@app.route('/api/add_pos', methods=['POST'])
 def api_info():
     data = request.json
     id_value = data.get('id')
     name_value = data.get('name')
     status_value = data.get('status')
-    import pdb
-    pdb.set_trace()
     response_data = {
-        'id': id_value,
+        'id_seat': id_value,
         'name': name_value,
-        'status': status_value
-    }
-
-    return jsonify(response_data)
-
-
-def enter_flight_detail():
-    data = request.get_json()
-    name = data.get('name')
-    seat_id = data.get('id')
-    status = data.get('status')
-    info_flight = {
-        'id': seat_id,
-        'name': name,
-        'status': status,
+        'status': status_value,
         "departure": session["info"]["departure"],
         "arrival": session["info"]["arrival"],
         "price": session["info"]["price"],
@@ -96,7 +99,28 @@ def enter_flight_detail():
         "id_class": session["info"]["id_class"],
         "plane": session["info"]["plane"]
     }
-    session['info'] = info_flight
+    session['info'] = response_data
+    # import pdb
+    # pdb.set_trace()
+    return jsonify(response_data)
+
+
+def enter_flight_detail():
+    response_data = {
+        'id_seat': session["info"]["id_seat"],
+        'name_seat': session["info"]["name"],
+        'status': session["info"]["status"],
+        "departure": session["info"]["departure"],
+        "arrival": session["info"]["arrival"],
+        "price": session["info"]["price"],
+        "departure_time": session["info"]["departure_time"],
+        "arrival_time": session["info"]["arrival_time"],
+        "class": session["info"]["class"],
+        "flight_id": session["info"]["flight_id"],
+        "id_class": session["info"]["id_class"],
+        "plane": session["info"]["plane"]
+    }
+    session['info'] = response_data
     return render_template('user/ticket-info.html')
 
 
@@ -107,7 +131,6 @@ def enter_customer_info():
         phone = request.form["phone"]
         identify = request.form["id"]
         gender = request.form["gender"]
-
         info_user = {
             "name": name,
             "birthdate": birthdate,
@@ -122,10 +145,14 @@ def enter_customer_info():
             "class": session["info"]["class"],
             "flight_id": session["info"]["flight_id"],
             "id_class": session["info"]["id_class"],
-            "plane": session["info"]["plane"]
+            "plane": session["info"]["plane"],
+            'id_seat': session["info"]["id_seat"],
+            'name_seat': session["info"]["name_seat"],
+            'status': session["info"]["status"]
         }
         session['info'] = info_user
-
+        # import pdb
+        # pdb.set_trace()
         return render_template('user/confirm.html')
 
 
@@ -169,7 +196,10 @@ def login():
         if user:
             # ghi nhận user đã đăng nhập ; current_user toàn cục
             login_user(user=user)
+            # if "next" in request.args:
+            #     return redirect(request.args["next"])
             return redirect(url_for('index'))
+
         else:
             err_mgs = "Lỗi sai username hoặc password!!"
     return render_template('home/login.html', err_mgs=err_mgs)
@@ -193,5 +223,133 @@ def sign_admin():
     return redirect("/admin")
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+def payment_cus():
+    try:
+        utils.save_ticket(session.get("info"))
+        import pdb
+        pdb.set_trace()
+        # client = Client(keys.account_sid, keys.auth_token)
+        # client.messages.create(
+        #     body="this is a sample message",
+        #     from_=keys.twilio_number,
+        #      to=keys.my_number)
+        #
+        # del session["info"]
+
+        return jsonify({"code": 200})
+
+    except Exception as ex:
+        return jsonify({"code": 400})
+
+
+def pay_online():
+    return render_template("user/stripe.html")
+
+
+
+stripe_keys = {
+    "secret_key": "sk_test_51O8JTWAinse2iCe4RYF94et3W6kCV1qmyVKtRa76ehMxWhziMPkSWfsVnHyB3cCMpeVpy3VrydwVWR5VONGgIpgM007PfrYs9v",
+    "publishable_key": "pk_test_51O8JTWAinse2iCe44j6W9QiJkRYJN2svgQPiFCYuUsE69LPiWHghEtd5rQxXyOsTLmvZgZ4wHEp4IbLdywLJG3is00HSIIsOo4",
+    "endpoint_secret": "whsec_da47e8ca5f6706fe92bd7fb8650e41f63c847d02393b46c471e1c987d1174e7f"
+}
+
+stripe.api_key = stripe_keys["secret_key"]
+
+
+def get_publishable_key():
+    return jsonify({"publicKey": stripe_keys["publishable_key"]})
+
+
+def create_payment_intent():
+    try:
+
+        payment_intent = stripe.PaymentIntent.create(
+            amount=1099,
+            currency='eur',
+            automatic_payment_methods={'enabled': True}
+        )
+        return jsonify({'clientSecret': payment_intent.client_secret})
+    except stripe.error.StripeError as e:
+        return jsonify({'error': {'message': e.user_message}})
+
+
+@app.route("/create-checkout-session")
+def create_checkout_session():
+    domain_url = "http://localhost:5000/"
+    stripe.api_key = stripe_keys["secret_key"]
+
+    try:
+        # Create new Checkout Session for the order
+        # Other optional params include:
+        # [billing_address_collection] - to display billing address details on the page
+        # [customer] - if you have an existing Stripe Customer ID
+        # [payment_intent_data] - lets capture the payment later
+        # [customer_email] - lets you prefill the email input in the form
+        # For full details see https:#stripe.com/docs/api/checkout/sessions/create
+
+        # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+        checkout_session = stripe.checkout.Session.create(
+            success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=domain_url + "cancelled",
+            payment_method_types=["card"],
+            mode="payment",
+            line_items=[
+                {
+                    "name": "T-shirt",
+                    "quantity": 1,
+                    "currency": "usd",
+                    "amount": "2000",
+                }
+            ]
+        )
+        return jsonify({"sessionId": checkout_session["id"]})
+    except Exception as e:
+        return jsonify(error=str(e)), 403
+
+
+@app.route('/my-route', methods=['POST'])
+def my_route():
+    import pdb
+    pdb.set_trace()
+    return jsonify({'request': request.json})
+
+
+@app.route("/webhook", methods=['POST'])
+def stripe_webhook():
+
+
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get('Stripe-Signature')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, stripe_keys["endpoint_secret"]
+        )
+
+    except ValueError as e:
+        # Invalid payload
+        return 'Invalid payload', 400
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return 'Invalid signature', 400
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        # Fulfill the purchase...
+        handle_checkout_session(session)
+
+    return 'Success', 200
+
+
+def handle_checkout_session(session):
+    print("Payment was successful.")
+    # TODO: run some custom code here
+
+
+
+
+#
+# if __name__ == '__main__':
+#     app.run(debug=True)

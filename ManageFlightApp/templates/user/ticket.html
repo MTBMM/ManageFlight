@@ -74,13 +74,13 @@
                 <span class="name">PASSENGER NAME<br><span>{{session['info']['name'] }}</span></span>
                 <span class="flight">FLIGHT N&deg;<br><span>{{session['info']['plane'] }}</span></span>
                 <span class="gate">GATE<br><span>11B</span></span>
-                <span class="seat">SEAT<br><span>A1</span></span>
+                <span class="seat">SEAT<br><span>{{session['info']['name_seat'] }}</span></span>
                 <span class="cccd">CCCD/CMND<span>{{session['info']['identify'] }}</span></span>
                 <span class="phone">PHONE<span>{{ session['info']['phone'] }}</span></span>
                 <span class="boardingtime">BOARDING TIME<br><span>{{session['info']['departure_time'] }}</span></span>
 
                 <span class="flight flightslip">FLIGHT N&deg;<br><span>{{session['info']['plane'] }}</span></span>
-                <span class="seat seatslip">SEAT<br><span>A1</span></span>
+                <span class="seat seatslip">SEAT<br><span>{{session['info']['name_seat'] }}</span></span>
                 <span class="name nameslip">PASSENGER NAME<br><span>{{session['info']['name'] }}</span></span>
             </div>
 
