@@ -31,18 +31,21 @@ def get_class():
 def get_detail_flight(flight_id):
     departure_airport_alias = aliased(Airport)
     arrival_airport_alias = aliased(Airport)
-    list_flight = db.session.query(
+    list_flight = (db.session.query(
         Flight,
         Route,
         departure_airport_alias,
         arrival_airport_alias,
         TicketPrice,
+        Plane.name
 
     ).join(Route, Flight.route_id == Route.id).join(
         departure_airport_alias, Route.departure_id == departure_airport_alias.id
     ).join(
         arrival_airport_alias, Route.arrival_id == arrival_airport_alias.id
-    ).join(TicketPrice, TicketPrice.flight_id == Flight.id).filter(Flight.id.__eq__(flight_id)).first()
+    ).join(TicketPrice, TicketPrice.flight_id == Flight.id)
+                   .join(Schedules, Schedules.flight_id == flight_id)
+                   .join(Plane, Schedules.plane_id == Plane.id).filter(Flight.id.__eq__(flight_id)).first())
     return list_flight
 
 

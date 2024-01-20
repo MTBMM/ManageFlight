@@ -1,5 +1,7 @@
 from flask import render_template, session
 from ManageFlightApp import app, controllers, utils, login, employee
+# from flask_session import Session
+from ManageFlightApp import app, controllers, utils, login, employee, decorator
 
 app.add_url_rule("/", 'index', controllers.index, methods=['get', 'post'])
 app.add_url_rule("/register", 'register', controllers.register, methods=['get', 'post'])
@@ -15,10 +17,11 @@ app.add_url_rule('/list_buy_ticket', 'list_buy_ticket', employee.list_buy_ticket
 app.add_url_rule('/employee_buy_ticket', 'employee_buy_ticket', employee.employee_buy_ticket, methods=['get'])
 app.add_url_rule('/load_detail_flight', 'load_detail_flight', employee.load_detail_flight,
                  methods=['get'])
+app.add_url_rule('/confirm', 'enter_customer_info', controllers.enter_customer_info, methods=['get', 'post'])
+app.add_url_rule('/api/info', 'enter_flight_detail', controllers.enter_flight_detail, methods=['get', 'post'])
 
 app.add_url_rule('/flight_detail', 'flight_detail', employee.flight_detail,
                  methods=['get'])
-
 
 app.add_url_rule("/UserInformation", 'user_information', employee.user_information,
                  methods=['get'])
@@ -26,6 +29,8 @@ app.add_url_rule("/UserInformation", 'user_information', employee.user_informati
 
 app.add_url_rule("/payment", 'payment', employee.payment,
                  methods=['get', 'post'])
+app.add_url_rule("/api/pay", 'payment', employee.payment,
+                 methods=['post'])
 
 app.add_url_rule("/enter_info", "enter_info", employee.enter_info, methods=["get", "post"])
 app.add_url_rule("/submit_airplane", "submit_airplane", employee.submit_airplane, methods=["get", "post"])
@@ -55,14 +60,11 @@ def account():
 # Session(app)
 
 
-@app.route("/info")
-def info():
-    return render_template('user/ticket-info.html')
+# @app.route("/info")
+# def info():
+#     return render_template('user/ticket-info.html')
 
 
-@app.route("/confirm")
-def confirm():
-    return render_template('user/confirm.html')
 
 
 @login.user_loader

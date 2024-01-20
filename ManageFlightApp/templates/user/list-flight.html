@@ -126,7 +126,7 @@
        aria-controls="collapseExample{{ f.id }}_{{ f.class_id }}">
       Xem chi tiết
     </a>
-</a>
+
     </p>
 
     <!-- End Example Code -->
@@ -136,7 +136,7 @@
                 <h5>GIÁ TIỀN: <strong id="price" style="color: #FFD733">{{ "{:,.0f}".format(f.ticket_price) }}</strong>/người
                 </h5>
             </div>
-            <button class="butn" style="background-color: #0579C3;"><a href="{{ url_for('load_pos', flight_id=f.id) }}"> CHOSE </a></button>
+            <button class="butn" style="background-color: #0579C3;"><a href="{{ url_for('load_pos', flight_id=f.id, class_id=f.class_id)}}"> CHOSE </a></button>
 
             <section>
                 <div class="times"  style=" width: 370px;">
@@ -150,7 +150,7 @@
                     </div>
                     <div class="box">
                         <small>ticket_class</small>
-                        <strong>{{ f.class_id }}</strong>
+                        <strong id="class_id">{{ f.class_id }}</strong>
                     </div>
                     <div class="box">
                         <small>Arrival</small>

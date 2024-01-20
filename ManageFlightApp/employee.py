@@ -4,6 +4,8 @@ from ManageFlightApp import UtilsEmployee, utils, app, keys
 # from twilio.rest import Client
 from io import BytesIO
 from reportlab.pdfgen import canvas
+import stripe
+
 
 def index_employee():
     return render_template("employee/index.html")
@@ -117,8 +119,6 @@ def user_information():
         if airport.id == list_flight.Route.arrival_id:
             arrival = airport.name
 
-
-
     info = {
         "flight_id": list_flight.Flight.id,
         "departure": departure,
@@ -223,9 +223,108 @@ def generate_pdf_file():
     return buffer
 
 
+stripe_keys = {
+    "secret_key": "sk_test_51O8JTWAinse2iCe4RYF94et3W6kCV1qmyVKtRa76ehMxWhziMPkSWfsVnHyB3cCMpeVpy3VrydwVWR5VONGgIpgM007PfrYs9v",
+    "publishable_key": "pk_test_51O8JTWAinse2iCe44j6W9QiJkRYJN2svgQPiFCYuUsE69LPiWHghEtd5rQxXyOsTLmvZgZ4wHEp4IbLdywLJG3is00HSIIsOo4",
+    "endpoint_secret": "whsec_da47e8ca5f6706fe92bd7fb8650e41f63c847d02393b46c471e1c987d1174e7f"
+}
 
-def delete_flight(flight_id):
-    pass
-    # UtilsEmployee.delete_flight(flight_id=flight_id)
+stripe.api_key = stripe_keys["secret_key"]
+
+
+@app.route("/config")
+def get_publishable_key():
+    return jsonify({"publicKey": stripe_keys["publishable_key"]})
+
+
+@app.route('/create-payment-intent', methods=['POST'])
+def create_payment_intent():
+    try:
+
+        payment_intent = stripe.PaymentIntent.create(
+            amount=1099,
+            currency='eur',
+            automatic_payment_methods={'enabled': True}
+        )
+        return jsonify({'clientSecret': payment_intent.client_secret})
+    except stripe.error.StripeError as e:
+        return jsonify({'error': {'message': e.user_message}})
+
+
+@app.route("/create-checkout-session")
+def create_checkout_session():
+    domain_url = "http://localhost:5000/"
+    stripe.api_key = stripe_keys["secret_key"]
+
+    try:
+        # Create new Checkout Session for the order
+        # Other optional params include:
+        # [billing_address_collection] - to display billing address details on the page
+        # [customer] - if you have an existing Stripe Customer ID
+        # [payment_intent_data] - lets capture the payment later
+        # [customer_email] - lets you prefill the email input in the form
+        # For full details see https:#stripe.com/docs/api/checkout/sessions/create
+
+        # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+        checkout_session = stripe.checkout.Session.create(
+            success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url=domain_url + "cancelled",
+            payment_method_types=["card"],
+            mode="payment",
+            line_items=[
+                {
+                    "name": "T-shirt",
+                    "quantity": 1,
+                    "currency": "usd",
+                    "amount": "2000",
+                }
+            ]
+        )
+        return jsonify({"sessionId": checkout_session["id"]})
+    except Exception as e:
+        return jsonify(error=str(e)), 403
+
+
+@app.route('/my-route', methods=['POST'])
+def my_route():
+    import pdb
+    pdb.set_trace()
+    return jsonify({'request': request.json})
+
+
+@app.route("/webhook", methods=['POST'])
+def stripe_webhook():
+
+
+    payload = request.get_data(as_text=True)
+    sig_header = request.headers.get('Stripe-Signature')
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, stripe_keys["endpoint_secret"]
+        )
+
+    except ValueError as e:
+        # Invalid payload
+        return 'Invalid payload', 400
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return 'Invalid signature', 400
+
+    # Handle the checkout.session.completed event
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        # Fulfill the purchase...
+        handle_checkout_session(session)
+
+    return 'Success', 200
+
+
+def handle_checkout_session(session):
+    print("Payment was successful.")
+    # TODO: run some custom code here
+
+
 
 

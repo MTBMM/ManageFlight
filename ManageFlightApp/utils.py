@@ -43,13 +43,30 @@ def percent_states():
 
 
 def General_States(m):
-    total_revenue = db.session.query(func.sum(Receipt.unit_price)).scalar()
-    k = 100 / total_revenue
-    return (db.session.query(Route.name, func.sum(Receipt.unit_price), func.count(Route.id),
-                             func.sum(Receipt.unit_price) * k, Route.id)
-            .join(Flight, Route.id == Flight.route_id)
-                      .filter(extract('month', Receipt.created_date) == m)
-            .group_by(Route.name, Route.id).all())
+    total_revenue = (
+            db.session.query(func.sum(Receipt.unit_price))
+            .join(ReceiptDetail, ReceiptDetail.receipt_id == Receipt.id)
+            .join(Ticket, Ticket.id == ReceiptDetail.ticket_id)
+            .join(Flight, Flight.id == Ticket.flight_id)
+            .filter(func.extract('month', Receipt.created_date) == m)
+            .scalar() or 1  # Tránh chia cho 0
+    )
+
+    return (
+        db.session.query(
+            Route.name,
+            func.sum(Receipt.unit_price).label('total_revenue'),
+            func.count(Flight.id).label('total_flights'),
+            (func.sum(Receipt.unit_price) / total_revenue * 100).label('revenue_percentage')
+        )
+        .join(Flight, Flight.route_id == Route.id)
+        .join(Ticket, Ticket.flight_id == Flight.id)
+        .join(ReceiptDetail, ReceiptDetail.ticket_id == Ticket.id)
+        .join(Receipt, Receipt.id == ReceiptDetail.receipt_id)
+        .filter(func.extract('month', Receipt.created_date) == m)
+        .group_by(Route.name)
+        .all()
+    )
 
 
 def register(name, username, password, avatar):
@@ -71,6 +88,10 @@ def get_all_airport_names():
     return db.session.query(Airport.id, Airport.name).all()
 
 
+def get_airport_name(a):
+    return db.session.query(Airport.name).filter(Airport.id.__eq__(a)).first()
+
+
 def get_route(start_location, end_location):
     return (db.session.query(Route.name, Airport.location, Flight.id).join(Airport, Airport.id == Route.departure_id)
             .join(Flight, Flight.id == Route.id)
@@ -81,7 +102,23 @@ def get_airport_id(f):
     return db.session.query(Airport.id).filter(Airport.name.__eq__(f)).first()
 
 
-from datetime import datetime
+def get_flight_by_id(flight_id):
+    return (db.session.query(Route.departure_id.label('departure_airport_id'),
+                             Route.arrival_id.label('arrival_airport_id'),
+                             Flight.departure_time.label('departure_time'),
+                             Flight.arrival_time.label('arrival_time'),
+                             Plane.name.label('plane_name'),
+                             TicketPrice.price.label('ticket_price'),
+                             TicketClass.name.label('ticket_class_name'))
+            .join(Flight, Flight.route_id == Route.id)
+            .join(Airport, Airport.id == Route.departure_id)
+            .join(TicketPrice, Flight.id == TicketPrice.flight_id)
+            .join(TicketClass, TicketPrice.ticket_class_id == TicketClass.id)
+            .join(Schedules, Schedules.flight_id == flight_id)
+            .join(Plane, Schedules.plane_id == Plane.id)
+            .filter(Flight.id.__eq__(flight_id))
+            .all()
+            )
 
 
 stop_alias = aliased(Stop)
@@ -196,8 +233,22 @@ def get_flight_details(start_location, end_location, departure):
     return result
 
 
+def get_seat(flight_id):
+    return (db.session.query(Seat).join(Plane, Plane.id == Seat.plane_id)
+            .join(Schedules, Schedules.plane_id == Plane.id)
+            .join(Flight, Flight.id == Schedules.flight_id)
+            .filter(Flight.id == flight_id)
+            .all())
+
+
+def get_seat_first(flight_id):
+    return (db.session.query(Seat.id).join(Plane, Plane.id == Seat.plane_id)
+            .join(Schedules, Schedules.plane_id == Plane.id)
+            .join(Flight, Flight.id == Schedules.flight_id)
+            .filter(Flight.id == flight_id)
+            .first())
+
+
 def get_list_seat(flight_id):
-    return db.session.query(Flight, TicketPrice, TicketClass).join(Flight.id == TicketPrice.flight_id)\
+    return db.session.query(Flight, TicketPrice, TicketClass).join(Flight.id == TicketPrice.flight_id) \
         .join()
-
-
