@@ -399,18 +399,18 @@ if __name__ == '__main__':
         db.session.add_all([r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11])
         db.session.commit()
 
-        f1 = Flight(route_id=1, departure_time='2023-12-31 9:00:00', number_of_airport=2,
-                    arrival_time='2023-12-31 17:00:00')
-        f2 = Flight(route_id=8, departure_time='2023-1-31 13:30:00', number_of_airport=2,
+        f1 = Flight(route_id=1, departure_time='2024-1-31 9:00:00', number_of_airport=2,
+                    arrival_time='2024-1-31 17:00:00')
+        f2 = Flight(route_id=8, departure_time='2024-02-1 13:30:00', number_of_airport=2,
                     arrival_time='2024-02-1 23:30:00')
         f3 = Flight(route_id=6, departure_time='2024-1-20 18:00:00', number_of_airport=1,
                     arrival_time='2024-1-8 23:00:00')
-        f4 = Flight(route_id=1, departure_time='2023-12-31 10:00:00', number_of_airport=2,
-                    arrival_time='2023-12-31 19:00:00')
+        f4 = Flight(route_id=1, departure_time='2024-1-31 10:00:00', number_of_airport=2,
+                    arrival_time='2024-1-31 19:00:00')
         f5 = Flight(route_id=1, departure_time='2024-1-20 9:00:00', number_of_airport=2,
-                    arrival_time='2024-1-8 17:00:00')
+                    arrival_time='2024-1-20 17:00:00')
         f6 = Flight(route_id=8, departure_time='2023-12-31 9:00:00', number_of_airport=2,
-                    arrival_time='2023-12-31 19:00:00')
+                    arrival_time='2024-1-31 19:00:00')
         f7 = Flight(route_id=1, departure_time='2023-12-31 2:00:00', number_of_airport=2,
                     arrival_time='2023-12-31 11:00:00')
         f8 = Flight(route_id=11, departure_time='2024-1-20 9:00:00', number_of_airport=0,

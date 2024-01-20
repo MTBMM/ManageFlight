@@ -3,7 +3,7 @@ from sqlalchemy.engine import cursor
 from ManageFlightApp.models import *
 import hashlib
 from sqlalchemy import func, extract, update
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from sqlalchemy import func
@@ -133,7 +133,8 @@ def get_stop_details(flight_ids):
 def get_flight_details(start_location, end_location, departure):
     de_id = get_airport_id(start_location)
     ar_id = get_airport_id(end_location)
-
+    current_time = datetime.now()
+    time_before_12_hours = current_time - timedelta(hours=12)
     airport_alias = aliased(Airport)
 
     subquery = (
@@ -171,7 +172,8 @@ def get_flight_details(start_location, end_location, departure):
         .join(subquery, subquery.c.id == Flight.id)
         .filter(Route.departure_id == de_id[0],
                 Route.arrival_id == ar_id[0],
-                func.date_format(Flight.departure_time, '%Y-%m-%d') == departure)
+                func.date_format(Flight.departure_time, '%Y-%m-%d') == departure,
+                Flight.departure_time > time_before_12_hours)
         .all()
     )
 
