@@ -399,14 +399,14 @@ if __name__ == '__main__':
         db.session.add_all([r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11])
         db.session.commit()
 
-        f1 = Flight(route_id=1, departure_time='2023-12-31 9:00:00', number_of_airport=2,
-                    arrival_time='2023-12-31 17:00:00')
+        f1 = Flight(route_id=1, departure_time='2024-1-31 9:00:00', number_of_airport=2,
+                    arrival_time='2024-1-31 17:00:00')
         f2 = Flight(route_id=8, departure_time='2023-1-31 13:30:00', number_of_airport=2,
                     arrival_time='2024-02-1 23:30:00')
-        f3 = Flight(route_id=6, departure_time='2024-1-20 18:00:00', number_of_airport=1,
-                    arrival_time='2024-1-8 23:00:00')
-        f4 = Flight(route_id=1, departure_time='2023-12-31 10:00:00', number_of_airport=2,
-                    arrival_time='2023-12-31 19:00:00')
+        f3 = Flight(route_id=6, departure_time='2024-2-20 18:00:00', number_of_airport=1,
+                    arrival_time='2024-2-20 23:00:00')
+        f4 = Flight(route_id=1, departure_time='2024-1-31 10:00:00', number_of_airport=2,
+                    arrival_time='2024-1-31 19:00:00')
         f5 = Flight(route_id=1, departure_time='2024-1-20 9:00:00', number_of_airport=2,
                     arrival_time='2024-1-8 17:00:00')
         f6 = Flight(route_id=8, departure_time='2023-12-31 9:00:00', number_of_airport=2,
@@ -419,14 +419,14 @@ if __name__ == '__main__':
         db.session.add_all([f1, f2, f3, f4, f5, f6, f7, f8])
         db.session.commit()
 
-        St1 = Stop(route_id=1, airport_id=4, order=1, arrival_time='2023-12-31 11:00:00', time_delay_max=30,
+        St1 = Stop(route_id=1, airport_id=4, order=1, arrival_time='2024-1-31 11:00:00', time_delay_max=30,
                    time_delay_min=20, flight_id=1)
-        St2 = Stop(route_id=1, airport_id=3, order=2, arrival_time='2023-12-31 14:00:00', time_delay_max=30,
+        St2 = Stop(route_id=1, airport_id=3, order=2, arrival_time='2024-1-31 14:00:00', time_delay_max=30,
                    time_delay_min=20, flight_id=1)
 
-        St3 = Stop(route_id=1, airport_id=4, order=1, arrival_time='2023-12-31 13:00:00', time_delay_max=30,
+        St3 = Stop(route_id=1, airport_id=4, order=1, arrival_time='2024-1-31 13:00:00', time_delay_max=30,
                    time_delay_min=20, flight_id=4)
-        St4 = Stop(route_id=1, airport_id=3, order=2, arrival_time='2023-12-31 17:00:00', time_delay_max=30,
+        St4 = Stop(route_id=1, airport_id=3, order=2, arrival_time='2024-1-31 17:00:00', time_delay_max=30,
                    time_delay_min=20, flight_id=4)
 
         St5 = Stop(route_id=1, airport_id=4, order=1, arrival_time='2024-1-20 11:00:00', time_delay_max=30,
@@ -444,21 +444,21 @@ if __name__ == '__main__':
         St12 = Stop(route_id=8, airport_id=10, order=2, arrival_time='2023-1-31 20:00:00', time_delay_max=30,
                     time_delay_min=20, flight_id=2)
 
-        St13 = Stop(route_id=8, airport_id=9, order=1, arrival_time='2024-1-20 12:00:00', time_delay_max=30,
+        St13 = Stop(route_id=8, airport_id=9, order=1, arrival_time='2024-2-20 12:00:00', time_delay_max=30,
                     time_delay_min=20, flight_id=6)
-        St14 = Stop(route_id=8, airport_id=10, order=2, arrival_time='2024-1-20 16:00:00', time_delay_max=30,
+        St14 = Stop(route_id=8, airport_id=10, order=2, arrival_time='2024-2-20 16:00:00', time_delay_max=30,
                     time_delay_min=20, flight_id=6)
 
-        St9 = Stop(route_id=6, airport_id=10, order=1, arrival_time='2024-1-20 20:00:00', time_delay_max=30,
+        St9 = Stop(route_id=6, airport_id=10, order=1, arrival_time='2024-2-20 20:00:00', time_delay_max=30,
                    time_delay_min=20, flight_id=3)
 
         db.session.add_all([St1, St2, St3, St4, St5, St6, St7, St8, St9, St10, St12, St13, St14])
         db.session.commit()
 
-        Rc1 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=3, flight_id=1,
+        Rc1 = Receipt(created_date='2024-1-30 09:45:00', user_id=1, employee_id=3, flight_id=1,
                       quantity=3,
                       unit_price=3600000)
-        Rc2 = Receipt(created_date='2023-12-30 19:15:00', user_id=2, employee_id=2, flight_id=1,
+        Rc2 = Receipt(created_date='2024-1-30 19:15:00', user_id=2, employee_id=2, flight_id=1,
                       quantity=2,
                       unit_price=3000000)
         Rc3 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=3, flight_id=1,
@@ -475,13 +475,13 @@ if __name__ == '__main__':
                       quantity=2,
                       unit_price=4400000)
 
-        Rc7 = Receipt(created_date='2023-12-30 09:45:00', user_id=1, employee_id=2, flight_id=4,
+        Rc7 = Receipt(created_date='2024-1-30 09:45:00', user_id=1, employee_id=2, flight_id=4,
                       quantity=3,
                       unit_price=5100000)
-        Rc8 = Receipt(created_date='2023-12-30 19:15:00', user_id=5, employee_id=3, flight_id=4,
+        Rc8 = Receipt(created_date='2024-1-30 19:15:00', user_id=5, employee_id=3, flight_id=4,
                       quantity=2,
                       unit_price=6400000)
-        Rc9 = Receipt(created_date='2023-12-22 21:10:00', user_id=3, employee_id=2, flight_id=4,
+        Rc9 = Receipt(created_date='2024-1-22 21:10:00', user_id=3, employee_id=2, flight_id=4,
                       quantity=2,
                       unit_price=6400000)
 

@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const {error} = await stripe.confirmPayment({
                                 elements,
                                 confirmParams: {
-                                            return_url:  window.location.href.split("?")[0] + "complete.html"
+                                            return_url:  "http://127.0.0.1:5000/ticket"
 
                                 }
                         })
